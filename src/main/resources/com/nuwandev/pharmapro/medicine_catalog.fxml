@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    PharmaPro – Medicine Catalog Screen
+    Controller: com.pharmapro.controllers.MedicineCatalogController
+-->
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane
+        xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/17"
+        fx:controller="com.nuwandev.pharmapro.ui.MedicineCatalogController"
+        fx:id="catalogRoot"
+        style="-fx-background-color: #f5f5f5;">
+
+    <!-- ══ CENTER: Main Catalog Area ══════════════════════════ -->
+    <center>
+        <VBox spacing="0">
+
+            <!-- ── Toolbar Row ── -->
+            <HBox fx:id="catalogToolbar"
+                  spacing="12"
+                  alignment="CENTER_LEFT"
+                  style="-fx-padding: 0 0 16px 0;">
+
+                <!-- Search Field with icon -->
+                <StackPane alignment="CENTER_LEFT">
+                    <TextField fx:id="medicineSearchField"
+                               styleClass="search-field"
+                               promptText="Search by name, brand, or barcode…"
+                               prefWidth="300"/>
+                    <Label text="🔍"
+                           style="-fx-padding: 0 0 0 10px; -fx-font-size: 14px;
+                                  -fx-text-fill: #9ca3af;"
+                           mouseTransparent="true"/>
+                </StackPane>
+
+                <!-- Category Filter -->
+                <ComboBox fx:id="categoryFilterCombo"
+                          styleClass="combo-box"
+                          promptText="All Categories"
+                          prefWidth="160"
+                          prefHeight="42"/>
+
+                <!-- Expiry Status Filter -->
+                <ComboBox fx:id="expiryStatusFilterCombo"
+                          styleClass="combo-box"
+                          promptText="Expiry Status"
+                          prefWidth="150"
+                          prefHeight="42"/>
+
+                <!-- Stock Status Filter -->
+                <ComboBox fx:id="stockStatusFilterCombo"
+                          styleClass="combo-box"
+                          promptText="Stock Status"
+                          prefWidth="140"
+                          prefHeight="42"/>
+
+                <!-- Clear Filters -->
+                <Button fx:id="clearFiltersBtn"
+                        text="Clear"
+                        styleClass="btn-secondary, btn-small"
+                        onAction="#clearFilters"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Import CSV -->
+                <Button fx:id="importCsvBtn"
+                        text="⬆  Import CSV"
+                        styleClass="btn-secondary"
+                        onAction="#importCSV"/>
+
+                <!-- Add Medicine -->
+                <Button fx:id="addMedicineBtn"
+                        text="＋  Add Medicine"
+                        styleClass="btn-primary"
+                        onAction="#openAddMedicine"/>
+
+            </HBox>
+
+            <!-- ── Active Filters / Result Count ── -->
+            <HBox fx:id="filterSummaryRow"
+                  alignment="CENTER_LEFT"
+                  spacing="10"
+                  style="-fx-padding: 0 0 12px 0;">
+                <Label fx:id="resultCountLabel"
+                       text="Showing 0 medicines"
+                       styleClass="caption-text"/>
+                <!-- Dynamic filter chips injected here by controller -->
+                <HBox fx:id="activeFilterChips" spacing="6"/>
+            </HBox>
+
+            <!-- ── Main Table Card ── -->
+            <VBox styleClass="card"
+                  spacing="0"
+                  VBox.vgrow="ALWAYS">
+
+                <!-- Table header row with selection info -->
+                <HBox fx:id="tableHeaderRow"
+                      alignment="CENTER_LEFT"
+                      spacing="12"
+                      style="-fx-padding: 12px 16px;">
+                    <Label fx:id="selectedCountLabel"
+                           text=""
+                           styleClass="caption-text"
+                           visible="false"
+                           managed="false"/>
+                    <Button fx:id="bulkDeleteBtn"
+                            text="Delete Selected"
+                            styleClass="btn-danger, btn-small"
+                            visible="false"
+                            managed="false"
+                            onAction="#bulkDelete"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <!-- Column visibility toggle placeholder -->
+                    <Button fx:id="columnToggleBtn"
+                            text="⊞ Columns"
+                            styleClass="btn-icon"
+                            style="-fx-text-fill: #6b7280; -fx-font-size: 13px;"/>
+                </HBox>
+
+                <Separator/>
+
+                <!-- Medicine Table -->
+                <TableView fx:id="medicineTable"
+                           styleClass="table-view"
+                           VBox.vgrow="ALWAYS"
+                           prefHeight="500"
+                           editable="false"
+                           placeholder="No medicines found. Click '+ Add Medicine' to get started.">
+                    <columns>
+
+                        <!-- Select column -->
+                        <TableColumn fx:id="selectCol"
+                                     text=""
+                                     maxWidth="44"
+                                     minWidth="44"
+                                     resizable="false"
+                                     sortable="false"/>
+
+                        <TableColumn fx:id="medicineNameCol"
+                                     text="MEDICINE NAME"
+                                     prefWidth="200"
+                                     minWidth="140"/>
+
+                        <TableColumn fx:id="medicineBrandCol"
+                                     text="BRAND"
+                                     prefWidth="150"
+                                     minWidth="100"/>
+
+                        <TableColumn fx:id="medicineCategoryCol"
+                                     text="CATEGORY"
+                                     prefWidth="120"
+                                     minWidth="80"/>
+
+                        <TableColumn fx:id="medicineUnitCol"
+                                     text="UNIT"
+                                     prefWidth="80"
+                                     minWidth="60"/>
+
+                        <TableColumn fx:id="medicineTotalQtyCol"
+                                     text="TOTAL QTY"
+                                     prefWidth="100"
+                                     minWidth="70"/>
+
+                        <TableColumn fx:id="medicineExpiringBatchesCol"
+                                     text="EXPIRING BATCHES"
+                                     prefWidth="140"
+                                     minWidth="110"/>
+
+                        <TableColumn fx:id="medicineSellPriceCol"
+                                     text="SELL PRICE"
+                                     prefWidth="100"
+                                     minWidth="80"/>
+
+                        <TableColumn fx:id="medicineStatusCol"
+                                     text="STATUS"
+                                     prefWidth="110"
+                                     minWidth="80"/>
+
+                        <TableColumn fx:id="medicineActionsCol"
+                                     text="ACTIONS"
+                                     prefWidth="130"
+                                     minWidth="110"
+                                     sortable="false"
+                                     resizable="false"/>
+
+                    </columns>
+                </TableView>
+
+                <!-- Table Footer: Pagination -->
+                <HBox fx:id="tableFooter"
+                      alignment="CENTER"
+                      spacing="16"
+                      style="-fx-padding: 12px 16px; -fx-border-color: #f3f4f6 transparent transparent transparent; -fx-border-width: 1px 0 0 0;">
+                    <Label fx:id="paginationInfoLabel"
+                           text="Page 1 of 1"
+                           styleClass="caption-text"
+                           HBox.hgrow="ALWAYS"/>
+                    <Pagination fx:id="medicinePagination"
+                                pageCount="1"
+                                currentPageIndex="0"
+                                maxPageIndicatorCount="5"/>
+                </HBox>
+
+            </VBox>
+
+        </VBox>
+    </center>
+
+    <!-- ══ RIGHT DRAWER: Medicine Detail + Batch List ════════ -->
+    <right>
+        <VBox fx:id="medicineDrawer"
+              styleClass="drawer-panel"
+              spacing="0"
+              visible="false"
+              managed="false"
+              minWidth="380" maxWidth="380">
+
+            <!-- Drawer Header -->
+            <HBox fx:id="drawerHeader"
+                  styleClass="drawer-header"
+                  alignment="CENTER_LEFT"
+                  spacing="12">
+                <VBox HBox.hgrow="ALWAYS" spacing="2">
+                    <Label fx:id="drawerMedicineName"
+                           text="Medicine Details"
+                           styleClass="title-small"
+                           wrapText="true"/>
+                    <Label fx:id="drawerMedicineBrand"
+                           text="Brand"
+                           styleClass="caption-text"/>
+                </VBox>
+                <Button fx:id="closeDrawerBtn"
+                        text="✕"
+                        styleClass="drawer-close-btn"
+                        onAction="#closeDrawer"/>
+            </HBox>
+
+            <!-- Drawer Scroll Content -->
+            <ScrollPane fitToWidth="true"
+                        hbarPolicy="NEVER"
+                        vbarPolicy="AS_NEEDED"
+                        VBox.vgrow="ALWAYS"
+                        style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                <VBox spacing="20" style="-fx-padding: 20px;">
+
+                    <!-- Medicine Summary Grid -->
+                    <VBox styleClass="card" spacing="12">
+                        <Label text="Details" styleClass="card-title"/>
+                        <GridPane hgap="12" vgap="10">
+                            <Label text="Category:" styleClass="form-label" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="0"/>
+                            <Label fx:id="drawerCategory" text="—" styleClass="body-text" GridPane.columnIndex="1"
+                                   GridPane.rowIndex="0"/>
+
+                            <Label text="Unit:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <Label fx:id="drawerUnit" text="—" styleClass="body-text" GridPane.columnIndex="1"
+                                   GridPane.rowIndex="1"/>
+
+                            <Label text="Total Stock:" styleClass="form-label" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="2"/>
+                            <Label fx:id="drawerTotalStock" text="—" styleClass="body-text" GridPane.columnIndex="1"
+                                   GridPane.rowIndex="2"/>
+
+                            <Label text="Reorder Level:" styleClass="form-label" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="3"/>
+                            <Label fx:id="drawerReorderLevel" text="—" styleClass="body-text" GridPane.columnIndex="1"
+                                   GridPane.rowIndex="3"/>
+
+                            <Label text="Status:" styleClass="form-label" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="4"/>
+                            <Label fx:id="drawerStatusBadge" text="Active"
+                                   styleClass="badge, badge-green"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        </GridPane>
+                    </VBox>
+
+                    <!-- Description -->
+                    <VBox styleClass="card" spacing="8">
+                        <Label text="Description" styleClass="card-title"/>
+                        <Label fx:id="drawerDescription"
+                               text="—"
+                               styleClass="body-text"
+                               wrapText="true"/>
+                    </VBox>
+
+                    <!-- Batch List -->
+                    <VBox spacing="12">
+                        <HBox alignment="CENTER_LEFT" spacing="0">
+                            <Label text="Batches"
+                                   styleClass="title-small"
+                                   HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="addBatchBtn"
+                                    text="＋ Add Batch"
+                                    styleClass="btn-primary, btn-small"
+                                    onAction="#openAddBatch"/>
+                        </HBox>
+
+                        <!-- Batch Table (embedded in drawer) -->
+                        <TableView fx:id="drawerBatchTable"
+                                   styleClass="table-view"
+                                   prefHeight="220"
+                                   placeholder="No batches recorded">
+                            <columns>
+                                <TableColumn fx:id="batchNumberCol" text="BATCH" prefWidth="90"/>
+                                <TableColumn fx:id="batchQtyCol" text="QTY" prefWidth="50"/>
+                                <TableColumn fx:id="batchExpiryCol" text="EXPIRY" prefWidth="90"/>
+                                <TableColumn fx:id="batchDaysLeftCol" text="DAYS" prefWidth="55"/>
+                                <TableColumn fx:id="batchStatusCol" text="STATUS" prefWidth="80"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+            <!-- Drawer Action Buttons -->
+            <HBox fx:id="drawerFooter"
+                  spacing="10"
+                  alignment="CENTER_RIGHT"
+                  style="-fx-padding: 14px 20px; -fx-border-color: #e5e7eb transparent transparent transparent; -fx-border-width: 1px 0 0 0; -fx-background-color: #f8fafc;">
+                <Button fx:id="drawerEditBtn"
+                        text="✏  Edit Medicine"
+                        styleClass="btn-secondary"
+                        onAction="#editMedicineFromDrawer"/>
+                <Button fx:id="drawerDeleteBtn"
+                        text="🗑  Delete"
+                        styleClass="btn-danger, btn-small"
+                        onAction="#deleteMedicineFromDrawer"/>
+            </HBox>
+
+        </VBox>
+    </right>
+
+</BorderPane>

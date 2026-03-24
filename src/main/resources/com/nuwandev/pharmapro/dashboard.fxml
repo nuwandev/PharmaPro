@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    PharmaPro – Dashboard Screen
+    Controller: com.pharmapro.controllers.DashboardController
+-->
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<ScrollPane
+        xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/17"
+        fx:controller="com.nuwandev.pharmapro.ui.DashboardController"
+        fx:id="dashboardScrollPane"
+        fitToWidth="true"
+        hbarPolicy="NEVER"
+        vbarPolicy="AS_NEEDED"
+        style="-fx-background-color: transparent; -fx-border-color: transparent;">
+
+    <VBox fx:id="dashboardRoot"
+          spacing="24"
+          style="-fx-padding: 4px 0 24px 0;">
+
+        <!-- ══ KPI Cards Row ══════════════════════════════════ -->
+        <HBox fx:id="kpiRow"
+              spacing="16"
+              alignment="CENTER_LEFT">
+            <HBox.margin>
+                <Insets/>
+            </HBox.margin>
+
+            <!-- Total Medicines -->
+            <HBox fx:id="kpiTotalMedicines"
+                  styleClass="kpi-card, kpi-card-teal"
+                  HBox.hgrow="ALWAYS"
+                  spacing="16"
+                  alignment="CENTER_LEFT">
+                <StackPane styleClass="kpi-icon-box, kpi-icon-teal">
+                    <Label text="💊" style="-fx-font-size: 22px;"/>
+                </StackPane>
+                <VBox spacing="4">
+                    <Label fx:id="kpiTotalMedicinesValue"
+                           text="0"
+                           styleClass="kpi-value"
+                           style="-fx-text-fill: #0d9488;"/>
+                    <Label text="Total Medicines"
+                           styleClass="kpi-label"/>
+                    <Label fx:id="kpiTotalMedicinesSub"
+                           text="Active SKUs"
+                           styleClass="caption-text"/>
+                </VBox>
+            </HBox>
+
+            <!-- Low Stock -->
+            <HBox fx:id="kpiLowStock"
+                  styleClass="kpi-card, kpi-card-yellow"
+                  HBox.hgrow="ALWAYS"
+                  spacing="16"
+                  alignment="CENTER_LEFT">
+                <StackPane styleClass="kpi-icon-box, kpi-icon-yellow">
+                    <Label text="⚠" style="-fx-font-size: 22px; -fx-text-fill: #f59e0b;"/>
+                </StackPane>
+                <VBox spacing="4">
+                    <Label fx:id="kpiLowStockValue"
+                           text="0"
+                           styleClass="kpi-value"
+                           style="-fx-text-fill: #f59e0b;"/>
+                    <Label text="Low Stock"
+                           styleClass="kpi-label"/>
+                    <Label fx:id="kpiLowStockSub"
+                           text="Below reorder level"
+                           styleClass="caption-text"/>
+                </VBox>
+            </HBox>
+
+            <!-- Expiring Soon -->
+            <HBox fx:id="kpiExpiringSoon"
+                  styleClass="kpi-card, kpi-card-red"
+                  HBox.hgrow="ALWAYS"
+                  spacing="16"
+                  alignment="CENTER_LEFT">
+                <StackPane styleClass="kpi-icon-box, kpi-icon-red">
+                    <Label text="📅" style="-fx-font-size: 22px;"/>
+                </StackPane>
+                <VBox spacing="4">
+                    <Label fx:id="kpiExpiringSoonValue"
+                           text="0"
+                           styleClass="kpi-value"
+                           style="-fx-text-fill: #ef4444;"/>
+                    <Label text="Expiring Soon"
+                           styleClass="kpi-label"/>
+                    <Label fx:id="kpiExpiringSoonSub"
+                           text="Within 30 days"
+                           styleClass="caption-text"/>
+                </VBox>
+            </HBox>
+
+            <!-- Today's Sales -->
+            <HBox fx:id="kpiTodaySales"
+                  styleClass="kpi-card, kpi-card-blue"
+                  HBox.hgrow="ALWAYS"
+                  spacing="16"
+                  alignment="CENTER_LEFT">
+                <StackPane styleClass="kpi-icon-box, kpi-icon-blue">
+                    <Label text="💰" style="-fx-font-size: 22px;"/>
+                </StackPane>
+                <VBox spacing="4">
+                    <Label fx:id="kpiTodaySalesValue"
+                           text="$0.00"
+                           styleClass="kpi-value"
+                           style="-fx-text-fill: #3b82f6;"/>
+                    <Label text="Today's Sales"
+                           styleClass="kpi-label"/>
+                    <Label fx:id="kpiTodaySalesSub"
+                           text="— transactions"
+                           styleClass="caption-text"/>
+                </VBox>
+            </HBox>
+
+        </HBox>
+
+        <!-- ══ Sales Chart + Quick Stats Row ═══════════════════ -->
+        <HBox spacing="16" alignment="TOP_LEFT">
+
+            <!-- Sales Chart Card -->
+            <VBox fx:id="salesChartCard"
+                  styleClass="card"
+                  HBox.hgrow="ALWAYS"
+                  spacing="0">
+                <HBox styleClass="card-header" alignment="CENTER_LEFT" spacing="0">
+                    <Label text="Sales Overview"
+                           styleClass="card-title"
+                           HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="chartRangeSelector"
+                              styleClass="combo-box"
+                              promptText="Last 7 Days"
+                              prefWidth="140"
+                              prefHeight="34"
+                              style="-fx-font-size: 13px;"/>
+                </HBox>
+
+                <!-- Chart placeholder – replace AreaChart data from controller -->
+                <AreaChart fx:id="salesAreaChart"
+                           prefHeight="230"
+                           VBox.vgrow="ALWAYS"
+                           legendVisible="false"
+                           animated="true"
+                           style="-fx-background-color: transparent; -fx-padding: 8px 0 0 0;">
+                    <xAxis>
+                        <CategoryAxis fx:id="salesChartXAxis"
+                                      tickLabelFill="#9ca3af"
+                                      style="-fx-font-size: 12px;"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="salesChartYAxis"
+                                    tickLabelFill="#9ca3af"
+                                    style="-fx-font-size: 12px;"
+                                    forceZeroInRange="true"/>
+                    </yAxis>
+                    <datasets>
+                        <XYChart.Series fx:id="salesSeries" name="Sales ($)"/>
+                    </datasets>
+                </AreaChart>
+            </VBox>
+
+            <!-- Right mini-stats column -->
+            <VBox spacing="12" minWidth="200" maxWidth="220">
+
+                <!-- Total Revenue Card -->
+                <VBox styleClass="card" spacing="8">
+                    <Label text="Monthly Revenue" styleClass="card-title"/>
+                    <Label fx:id="monthlyRevenueValue"
+                           text="$0.00"
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #0d9488;"/>
+                    <HBox alignment="CENTER_LEFT" spacing="6">
+                        <Label fx:id="revenueTrendIcon"
+                               text="▲"
+                               style="-fx-font-size: 11px; -fx-text-fill: #10b981;"/>
+                        <Label fx:id="revenueTrendValue"
+                               text="+0%  vs last month"
+                               styleClass="caption-text"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Transactions Today -->
+                <VBox styleClass="card" spacing="8">
+                    <Label text="Transactions Today" styleClass="card-title"/>
+                    <Label fx:id="todayTransactionCount"
+                           text="0"
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #3b82f6;"/>
+                    <Label fx:id="todayTransactionSub"
+                           text="Completed sales"
+                           styleClass="caption-text"/>
+                </VBox>
+
+                <!-- Stock Health -->
+                <VBox styleClass="card" spacing="8">
+                    <Label text="Stock Health" styleClass="card-title"/>
+                    <ProgressBar fx:id="stockHealthBar"
+                                 progress="0.75"
+                                 prefWidth="160"
+                                 prefHeight="8"
+                                 style="-fx-accent: #0d9488; -fx-control-inner-background: #e5e7eb; -fx-background-radius: 4; -fx-border-radius: 4;"/>
+                    <Label fx:id="stockHealthLabel"
+                           text="75% items adequate"
+                           styleClass="caption-text"/>
+                </VBox>
+
+            </VBox>
+
+        </HBox>
+
+        <!-- ══ Tables Row: Expiring + Low Stock ═════════════════ -->
+        <HBox spacing="16" alignment="TOP_LEFT">
+
+            <!-- Expiring Soon Table -->
+            <VBox fx:id="expiringTableCard"
+                  styleClass="card"
+                  HBox.hgrow="ALWAYS"
+                  spacing="0">
+
+                <HBox styleClass="card-header" alignment="CENTER_LEFT" spacing="0">
+                    <Label text="⏰  Expiring Soon (≤ 30 days)"
+                           styleClass="card-title"
+                           HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="viewAllExpiringBtn"
+                            text="View All →"
+                            styleClass="btn-icon"
+                            style="-fx-text-fill: #0d9488; -fx-font-size: 13px; -fx-font-weight: 600;"
+                            onAction="#viewAllExpiring"/>
+                </HBox>
+
+                <TableView fx:id="expiringTable"
+                           styleClass="table-view"
+                           prefHeight="220"
+                           VBox.vgrow="ALWAYS"
+                           placeholder="No expiring medicines found">
+                    <columns>
+                        <TableColumn fx:id="expiryMedicineCol"
+                                     text="MEDICINE"
+                                     prefWidth="160"/>
+                        <TableColumn fx:id="expiryBatchCol"
+                                     text="BATCH"
+                                     prefWidth="90"/>
+                        <TableColumn fx:id="expiryQtyCol"
+                                     text="QTY"
+                                     prefWidth="60"/>
+                        <TableColumn fx:id="expiryDateCol"
+                                     text="EXPIRY DATE"
+                                     prefWidth="100"/>
+                        <TableColumn fx:id="expiryDaysLeftCol"
+                                     text="DAYS LEFT"
+                                     prefWidth="90"/>
+                        <TableColumn fx:id="expiryStatusCol"
+                                     text="STATUS"
+                                     prefWidth="90"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <!-- Low Stock Table -->
+            <VBox fx:id="lowStockTableCard"
+                  styleClass="card"
+                  HBox.hgrow="ALWAYS"
+                  spacing="0">
+
+                <HBox styleClass="card-header" alignment="CENTER_LEFT" spacing="0">
+                    <Label text="📉  Low Stock Alert"
+                           styleClass="card-title"
+                           HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="viewAllLowStockBtn"
+                            text="View All →"
+                            styleClass="btn-icon"
+                            style="-fx-text-fill: #0d9488; -fx-font-size: 13px; -fx-font-weight: 600;"
+                            onAction="#viewAllLowStock"/>
+                </HBox>
+
+                <TableView fx:id="lowStockTable"
+                           styleClass="table-view"
+                           prefHeight="220"
+                           VBox.vgrow="ALWAYS"
+                           placeholder="All items are adequately stocked">
+                    <columns>
+                        <TableColumn fx:id="lowStockMedicineCol"
+                                     text="MEDICINE"
+                                     prefWidth="160"/>
+                        <TableColumn fx:id="lowStockCategoryCol"
+                                     text="CATEGORY"
+                                     prefWidth="100"/>
+                        <TableColumn fx:id="lowStockCurrentQtyCol"
+                                     text="CURRENT QTY"
+                                     prefWidth="110"/>
+                        <TableColumn fx:id="lowStockReorderLvlCol"
+                                     text="REORDER LEVEL"
+                                     prefWidth="120"/>
+                        <TableColumn fx:id="lowStockStatusCol"
+                                     text="STATUS"
+                                     prefWidth="90"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+        </HBox>
+
+        <!-- ══ Recent Transactions ═══════════════════════════════ -->
+        <VBox fx:id="recentSalesCard"
+              styleClass="card"
+              spacing="0">
+
+            <HBox styleClass="card-header" alignment="CENTER_LEFT" spacing="0">
+                <Label text="🧾  Recent Transactions"
+                       styleClass="card-title"
+                       HBox.hgrow="ALWAYS"/>
+                <Button fx:id="viewAllSalesBtn"
+                        text="View All →"
+                        styleClass="btn-icon"
+                        style="-fx-text-fill: #0d9488; -fx-font-size: 13px; -fx-font-weight: 600;"
+                        onAction="#viewAllSales"/>
+            </HBox>
+
+            <TableView fx:id="recentSalesTable"
+                       styleClass="table-view"
+                       prefHeight="200"
+                       placeholder="No recent transactions">
+                <columns>
+                    <TableColumn fx:id="saleReceiptCol"
+                                 text="RECEIPT #"
+                                 prefWidth="120"/>
+                    <TableColumn fx:id="saleDateTimeCol"
+                                 text="DATE &amp; TIME"
+                                 prefWidth="150"/>
+                    <TableColumn fx:id="saleCashierCol"
+                                 text="CASHIER"
+                                 prefWidth="130"/>
+                    <TableColumn fx:id="saleItemsCol"
+                                 text="ITEMS"
+                                 prefWidth="70"/>
+                    <TableColumn fx:id="saleTotalCol"
+                                 text="TOTAL"
+                                 prefWidth="100"/>
+                    <TableColumn fx:id="salePaymentMethodCol"
+                                 text="PAYMENT"
+                                 prefWidth="100"/>
+                    <TableColumn fx:id="saleStatusCol"
+                                 text="STATUS"
+                                 prefWidth="90"/>
+                </columns>
+            </TableView>
+        </VBox>
+
+    </VBox>
+</ScrollPane>

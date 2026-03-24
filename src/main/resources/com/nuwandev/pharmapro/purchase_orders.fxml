@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    PharmaPro – Purchase Orders Screen
+    Controller: com.pharmapro.controllers.PurchaseOrderController
+-->
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane
+        xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/17"
+        fx:controller="com.nuwandev.pharmapro.ui.PurchaseOrderController"
+        fx:id="purchaseOrderRoot"
+        style="-fx-background-color: #f5f5f5;">
+
+    <!-- ══ CENTER: PO List (default view) ═══════════════════════
+         Visibility toggled by controller — switches between
+         poListView and poDetailView.
+    ══════════════════════════════════════════════════════════ -->
+    <center>
+        <StackPane>
+
+            <!-- ── PO List View ── -->
+            <VBox fx:id="poListView" spacing="0">
+
+                <!-- Toolbar -->
+                <HBox fx:id="poToolbar"
+                      spacing="12"
+                      alignment="CENTER_LEFT"
+                      style="-fx-padding: 0 0 16px 0;">
+
+                    <StackPane alignment="CENTER_LEFT">
+                        <TextField fx:id="poSearchField"
+                                   styleClass="search-field"
+                                   promptText="Search PO number or supplier…"
+                                   prefWidth="280"/>
+                        <Label text="🔍"
+                               style="-fx-padding: 0 0 0 10px; -fx-font-size: 13px; -fx-text-fill: #9ca3af;"
+                               mouseTransparent="true"/>
+                    </StackPane>
+
+                    <ComboBox fx:id="poStatusFilterCombo"
+                              styleClass="combo-box"
+                              promptText="All Statuses"
+                              prefWidth="150" prefHeight="42"/>
+
+                    <ComboBox fx:id="poSupplierFilterCombo"
+                              styleClass="combo-box"
+                              promptText="All Suppliers"
+                              prefWidth="170" prefHeight="42"/>
+
+                    <DatePicker fx:id="poFromDatePicker"
+                                styleClass="date-picker"
+                                promptText="From"
+                                prefWidth="140"/>
+
+                    <DatePicker fx:id="poToDatePicker"
+                                styleClass="date-picker"
+                                promptText="To"
+                                prefWidth="140"/>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <Button fx:id="createPOBtn"
+                            text="＋  Create PO"
+                            styleClass="btn-primary"
+                            onAction="#openCreatePO"/>
+
+                </HBox>
+
+                <!-- Summary Strip -->
+                <HBox spacing="12" style="-fx-padding: 0 0 16px 0;">
+                    <HBox styleClass="kpi-card" spacing="10" alignment="CENTER_LEFT" prefWidth="160">
+                        <Label text="📋" style="-fx-font-size: 18px;"/>
+                        <VBox spacing="2">
+                            <Label fx:id="totalPOsValue" text="0"
+                                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                            <Label text="Total POs" styleClass="caption-text"/>
+                        </VBox>
+                    </HBox>
+                    <HBox styleClass="kpi-card" spacing="10" alignment="CENTER_LEFT" prefWidth="160">
+                        <Label text="⏳" style="-fx-font-size: 18px;"/>
+                        <VBox spacing="2">
+                            <Label fx:id="pendingPOsValue" text="0"
+                                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+                            <Label text="Pending" styleClass="caption-text"/>
+                        </VBox>
+                    </HBox>
+                    <HBox styleClass="kpi-card" spacing="10" alignment="CENTER_LEFT" prefWidth="160">
+                        <Label text="✅" style="-fx-font-size: 18px;"/>
+                        <VBox spacing="2">
+                            <Label fx:id="receivedPOsValue" text="0"
+                                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #0d9488;"/>
+                            <Label text="Received" styleClass="caption-text"/>
+                        </VBox>
+                    </HBox>
+                    <HBox styleClass="kpi-card" spacing="10" alignment="CENTER_LEFT" prefWidth="160">
+                        <Label text="💰" style="-fx-font-size: 18px;"/>
+                        <VBox spacing="2">
+                            <Label fx:id="totalPOValueLabel" text="$0.00"
+                                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #3b82f6;"/>
+                            <Label text="Total Value" styleClass="caption-text"/>
+                        </VBox>
+                    </HBox>
+                </HBox>
+
+                <!-- PO Table -->
+                <VBox styleClass="card" spacing="0" VBox.vgrow="ALWAYS">
+
+                    <TableView fx:id="poTable"
+                               styleClass="table-view"
+                               VBox.vgrow="ALWAYS"
+                               prefHeight="500"
+                               placeholder="No purchase orders found.">
+                        <columns>
+
+                            <TableColumn fx:id="poNumberCol"
+                                         text="PO NUMBER"
+                                         prefWidth="130" minWidth="100"/>
+
+                            <TableColumn fx:id="poSupplierCol"
+                                         text="SUPPLIER"
+                                         prefWidth="180" minWidth="130"/>
+
+                            <TableColumn fx:id="poStatusCol"
+                                         text="STATUS"
+                                         prefWidth="120" minWidth="90"/>
+
+                            <TableColumn fx:id="poItemCountCol"
+                                         text="ITEMS"
+                                         prefWidth="70" minWidth="55"/>
+
+                            <TableColumn fx:id="poTotalAmountCol"
+                                         text="TOTAL AMOUNT"
+                                         prefWidth="130" minWidth="100"/>
+
+                            <TableColumn fx:id="poCreatedDateCol"
+                                         text="CREATED"
+                                         prefWidth="120" minWidth="90"/>
+
+                            <TableColumn fx:id="poExpectedDateCol"
+                                         text="EXPECTED"
+                                         prefWidth="120" minWidth="90"/>
+
+                            <TableColumn fx:id="poActionsCol"
+                                         text="ACTIONS"
+                                         prefWidth="160" minWidth="140"
+                                         sortable="false" resizable="false"/>
+
+                        </columns>
+                    </TableView>
+
+                    <!-- Pagination -->
+                    <HBox alignment="CENTER"
+                          spacing="16"
+                          style="-fx-padding: 12px 16px; -fx-border-color: #f3f4f6 transparent transparent transparent; -fx-border-width: 1px 0 0 0;">
+                        <Label fx:id="poPaginationInfo"
+                               text="Page 1 of 1"
+                               styleClass="caption-text"
+                               HBox.hgrow="ALWAYS"/>
+                        <Pagination fx:id="poPagination"
+                                    pageCount="1" currentPageIndex="0"
+                                    maxPageIndicatorCount="5"/>
+                    </HBox>
+                </VBox>
+
+            </VBox>
+
+            <!-- ── PO Detail View (shown when a PO is selected) ── -->
+            <VBox fx:id="poDetailView"
+                  spacing="0"
+                  visible="false"
+                  managed="false">
+
+                <!-- Detail Header -->
+                <HBox alignment="CENTER_LEFT" spacing="12"
+                      style="-fx-padding: 0 0 16px 0;">
+                    <Button fx:id="backToPOListBtn"
+                            text="← Back to Orders"
+                            styleClass="btn-secondary, btn-small"
+                            onAction="#backToPOList"/>
+                    <Label text=" / " styleClass="caption-text"/>
+                    <Label fx:id="poDetailNumberLabel"
+                           text="PO-000001"
+                           styleClass="title-small"/>
+                    <Label fx:id="poDetailStatusBadge"
+                           text="Draft"
+                           styleClass="badge, badge-gray"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <!-- Action Buttons -->
+                    <Button fx:id="saveDraftBtn"
+                            text="💾  Save Draft"
+                            styleClass="btn-secondary"
+                            onAction="#saveDraft"/>
+                    <Button fx:id="submitPOBtn"
+                            text="📤  Submit Order"
+                            styleClass="btn-primary"
+                            onAction="#submitPO"/>
+                    <Button fx:id="markReceivedBtn"
+                            text="✅  Mark Received"
+                            styleClass="btn-primary"
+                            onAction="#markAsReceived"
+                            visible="false"
+                            managed="false"/>
+                    <Button fx:id="cancelPOBtn"
+                            text="Cancel PO"
+                            styleClass="btn-danger, btn-small"
+                            onAction="#cancelPO"/>
+                </HBox>
+
+                <HBox spacing="16" alignment="TOP_LEFT">
+
+                    <!-- Left: Supplier Info Card -->
+                    <VBox styleClass="card"
+                          spacing="14"
+                          minWidth="280" maxWidth="300">
+                        <Label text="Supplier Information" styleClass="card-title"/>
+
+                        <VBox spacing="4">
+                            <Label text="Supplier" styleClass="form-label"/>
+                            <ComboBox fx:id="poSupplierCombo"
+                                      styleClass="combo-box"
+                                      maxWidth="Infinity"
+                                      promptText="Select supplier"/>
+                        </VBox>
+
+                        <GridPane hgap="8" vgap="8">
+                            <Label text="Contact:" styleClass="form-label"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <Label fx:id="supplierContactLabel" text="—"
+                                   styleClass="body-text"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                   wrapText="true"/>
+
+                            <Label text="Phone:" styleClass="form-label"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <Label fx:id="supplierPhoneLabel" text="—"
+                                   styleClass="body-text"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <Label text="Email:" styleClass="form-label"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                            <Label fx:id="supplierEmailLabel" text="—"
+                                   styleClass="body-text"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="2"
+                                   wrapText="true"/>
+                        </GridPane>
+
+                        <Separator/>
+
+                        <VBox spacing="4">
+                            <Label text="Expected Delivery" styleClass="form-label"/>
+                            <DatePicker fx:id="poExpectedDeliveryPicker"
+                                        styleClass="date-picker"
+                                        maxWidth="Infinity"/>
+                        </VBox>
+
+                        <VBox spacing="4">
+                            <Label text="Notes" styleClass="form-label"/>
+                            <TextArea fx:id="poNotesField"
+                                      styleClass="form-textarea"
+                                      promptText="Notes to supplier…"
+                                      wrapText="true"
+                                      prefRowCount="3"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Right: Items Table -->
+                    <VBox styleClass="card" spacing="0" HBox.hgrow="ALWAYS">
+
+                        <!-- Add Item Row -->
+                        <HBox spacing="10" alignment="CENTER_LEFT"
+                              style="-fx-padding: 0 0 12px 0;">
+                            <Label text="Order Items"
+                                   styleClass="card-title"
+                                   HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="addPOItemBtn"
+                                    text="＋ Add Item"
+                                    styleClass="btn-primary, btn-small"
+                                    onAction="#addItemToPO"/>
+                        </HBox>
+
+                        <TableView fx:id="poItemsTable"
+                                   styleClass="table-view"
+                                   VBox.vgrow="ALWAYS"
+                                   prefHeight="320"
+                                   editable="true"
+                                   placeholder="No items added. Click '+ Add Item' above.">
+                            <columns>
+                                <TableColumn fx:id="poItemMedicineCol"
+                                             text="MEDICINE"
+                                             prefWidth="200"/>
+                                <TableColumn fx:id="poItemUnitCol"
+                                             text="UNIT"
+                                             prefWidth="80"/>
+                                <TableColumn fx:id="poItemQtyCol"
+                                             text="QTY ORDERED"
+                                             prefWidth="110"
+                                             editable="true"/>
+                                <TableColumn fx:id="poItemReceivedQtyCol"
+                                             text="QTY RECEIVED"
+                                             prefWidth="115"
+                                             editable="true"/>
+                                <TableColumn fx:id="poItemUnitCostCol"
+                                             text="UNIT COST"
+                                             prefWidth="110"
+                                             editable="true"/>
+                                <TableColumn fx:id="poItemSubtotalCol"
+                                             text="SUBTOTAL"
+                                             prefWidth="110"/>
+                                <TableColumn fx:id="poItemRemoveCol"
+                                             text=""
+                                             maxWidth="44" minWidth="44"
+                                             sortable="false" resizable="false"/>
+                            </columns>
+                        </TableView>
+
+                        <!-- Items Summary -->
+                        <VBox style="-fx-padding: 12px 16px; -fx-background-color: #f8fafc; -fx-border-color: #e5e7eb transparent transparent transparent; -fx-border-width: 1px 0 0 0;">
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="Subtotal" styleClass="body-text" HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="poSubtotalLabel" text="$0.00"
+                                       style="-fx-font-size: 14px; -fx-font-weight: 600;"/>
+                            </HBox>
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="Tax" styleClass="body-text" HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="poTaxLabel" text="$0.00" styleClass="body-text"/>
+                            </HBox>
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="Grand Total"
+                                       style="-fx-font-size: 15px; -fx-font-weight: bold;"
+                                       HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="poGrandTotalLabel" text="$0.00"
+                                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0d9488;"/>
+                            </HBox>
+                        </VBox>
+
+                    </VBox>
+                </HBox>
+            </VBox>
+
+        </StackPane>
+    </center>
+
+</BorderPane>
