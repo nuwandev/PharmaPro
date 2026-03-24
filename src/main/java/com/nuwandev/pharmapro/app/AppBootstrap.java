@@ -6,14 +6,19 @@ import com.nuwandev.pharmapro.database.DatabaseContext;
 
 import javax.sql.DataSource;
 
-public class AppBootstrap {
+public final class AppBootstrap {
+    private static boolean initialized = false;
+
     private AppBootstrap() {
-        /* This utility class should not be instantiated */
     }
 
-    public static void init() {
+    public static synchronized void init() {
+        if (initialized) return;
+
         DataSource dataSource = DataSourceConfig.create();
         FlywayConfig.migrate(dataSource);
         DatabaseContext.setDataSource(dataSource);
+
+        initialized = true;
     }
 }
