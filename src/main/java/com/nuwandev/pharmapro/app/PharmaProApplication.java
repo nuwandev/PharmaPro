@@ -8,8 +8,11 @@ import javafx.stage.Stage;
 public class PharmaProApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/login.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
+        FXMLLoader fxmlLoader = new FXMLLoader(
+                getClass().getResource("/com/nuwandev/pharmapro/login.fxml")
+        );
+
+        Scene scene = new Scene(fxmlLoader.load(), 420, 640);
         stage.setTitle("PharmaPro Login");
         stage.setScene(scene);
         stage.show();
