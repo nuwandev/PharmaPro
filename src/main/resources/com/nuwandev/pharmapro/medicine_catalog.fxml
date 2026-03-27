@@ -2,7 +2,7 @@
 
 <!--
     PharmaPro – Medicine Catalog Screen
-    Controller: com.pharmapro.controllers.MedicineCatalogController
+    Controller: com.nuwandev.pharmapro.ui.MedicineCatalogController
 -->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

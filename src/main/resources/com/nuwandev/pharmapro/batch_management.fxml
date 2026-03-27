@@ -3,7 +3,7 @@
 <!--
     PharmaPro – Batch Management Screen
     Can be loaded as a standalone screen OR embedded inside the medicine drawer.
-    Controller: com.pharmapro.controllers.BatchManagementController
+    Controller: com.nuwandev.pharmapro.ui.BatchManagementController
 -->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

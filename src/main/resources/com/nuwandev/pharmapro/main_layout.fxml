@@ -3,7 +3,7 @@
 <!--
     PharmaPro – Main Application Shell
     Sidebar + Topbar + Content Area
-    Controller: com.pharmapro.controllers.MainLayoutController
+    Controller: com.nuwandev.pharmapro.ui.MainLayoutController
 -->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

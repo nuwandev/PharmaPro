@@ -2,7 +2,7 @@
 
 <!--
     PharmaPro – Reports Screen
-    Controller: com.pharmapro.controllers.ReportsController
+    Controller: com.nuwandev.pharmapro.ui.ReportsController
 -->
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>

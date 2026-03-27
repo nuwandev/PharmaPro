@@ -3,7 +3,7 @@
 <!--
     PharmaPro – Point of Sale (POS) / Sales Screen
     Keyboard shortcuts: Enter (add to cart), F2 (focus search), Esc (clear/cancel)
-    Controller: com.pharmapro.controllers.POSController
+    Controller: com.nuwandev.pharmapro.ui.POSController
 -->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

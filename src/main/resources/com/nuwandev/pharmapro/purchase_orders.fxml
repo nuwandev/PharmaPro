@@ -2,7 +2,7 @@
 
 <!--
     PharmaPro – Purchase Orders Screen
-    Controller: com.pharmapro.controllers.PurchaseOrderController
+    Controller: com.nuwandev.pharmapro.ui.PurchaseOrderController
 -->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

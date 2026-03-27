@@ -2,7 +2,7 @@
 
 <!--
     PharmaPro – Supplier Management Screen
-    Controller: com.pharmapro.controllers.SupplierController
+    Controller: com.nuwandev.pharmapro.ui.SupplierController
 -->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

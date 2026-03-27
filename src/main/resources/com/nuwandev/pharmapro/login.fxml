@@ -2,7 +2,7 @@
 
 <!--
     PharmaPro – Login Screen
-    Controller: com.pharmapro.controllers.LoginController
+    Controller: com.nuwandev.pharmapro.ui.LoginController
 -->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

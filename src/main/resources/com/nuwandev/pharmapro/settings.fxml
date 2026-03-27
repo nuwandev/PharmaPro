@@ -3,7 +3,7 @@
 <!--
     PharmaPro – Settings Screen
     Tabs: General | Reorder Rules | Receipt Template | Users & Access
-    Controller: com.pharmapro.controllers.SettingsController
+    Controller: com.nuwandev.pharmapro.ui.SettingsController
 -->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

@@ -2,7 +2,7 @@
 
 <!--
     PharmaPro – Dashboard Screen
-    Controller: com.pharmapro.controllers.DashboardController
+    Controller: com.nuwandev.pharmapro.ui.DashboardController
 -->
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.*?>
