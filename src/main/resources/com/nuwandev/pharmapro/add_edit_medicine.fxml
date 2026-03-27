@@ -3,7 +3,7 @@
 <!--
     PharmaPro – Add / Edit Medicine Form
     Used as both a standalone screen and inside a modal dialog.
-    Controller: com.pharmapro.controllers.MedicineFormController
+    Controller: com.nuwandev.pharmapro.ui.MedicineFormController
 -->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
