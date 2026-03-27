@@ -2,19 +2,20 @@ package com.nuwandev.pharmapro.database;
 
 import javax.sql.DataSource;
 
-public class DatabaseContext {
-    private DatabaseContext() {
-        /* This utility class should not be instantiated */
-    }
-
+public final class DatabaseContext {
     private static DataSource dataSource;
 
-    public static DataSource getDataSource() {
-        return dataSource;
+    private DatabaseContext() {
     }
 
     public static void setDataSource(DataSource ds) {
         dataSource = ds;
     }
-}
 
+    public static DataSource getDataSource() {
+        if (dataSource == null) {
+            throw new IllegalStateException("DataSource not initialized");
+        }
+        return dataSource;
+    }
+}
