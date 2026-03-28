@@ -156,8 +156,10 @@
                 <TableView fx:id="cartTable"
                            styleClass="table-view"
                            VBox.vgrow="ALWAYS"
-                           editable="true"
-                           placeholder="Cart is empty. Search for a medicine above.">
+                           editable="true">
+                    <placeholder>
+                        <Label text="Cart is empty. Search for a medicine above."/>
+                    </placeholder>
                     <columns>
 
                         <!-- # -->

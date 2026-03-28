@@ -296,8 +296,10 @@
 
                         <TableView fx:id="reorderRulesTable"
                                    styleClass="table-view"
-                                   prefHeight="260"
-                                   placeholder="No custom rules. Using global defaults.">
+                                   prefHeight="260">
+                            <placeholder>
+                                <Label text="No custom rules. Using global defaults."/>
+                            </placeholder>
                             <columns>
                                 <TableColumn fx:id="ruleCategoryCol"
                                              text="CATEGORY" prefWidth="180"/>
@@ -525,8 +527,10 @@
                     <VBox styleClass="settings-section" spacing="0">
                         <TableView fx:id="usersTable"
                                    styleClass="table-view"
-                                   prefHeight="380"
-                                   placeholder="No users found.">
+                                   prefHeight="380">
+                            <placeholder>
+                                <Label text="No users found."/>
+                            </placeholder>
                             <columns>
                                 <TableColumn fx:id="userAvatarCol"
                                              text=""

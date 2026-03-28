@@ -57,8 +57,10 @@
             <TableView fx:id="supplierTable"
                        styleClass="table-view"
                        VBox.vgrow="ALWAYS"
-                       prefHeight="560"
-                       placeholder="No suppliers found. Click '+ Add Supplier' to get started.">
+                       prefHeight="560">
+                <placeholder>
+                    <Label text="No suppliers found. Click '+ Add Supplier' to get started."/>
+                </placeholder>
                 <columns>
 
                     <TableColumn fx:id="supplierNameCol"

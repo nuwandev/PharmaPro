@@ -110,8 +110,10 @@
                     <TableView fx:id="poTable"
                                styleClass="table-view"
                                VBox.vgrow="ALWAYS"
-                               prefHeight="500"
-                               placeholder="No purchase orders found.">
+                               prefHeight="500">
+                        <placeholder>
+                            <Label text="No purchase orders found."/>
+                        </placeholder>
                         <columns>
 
                             <TableColumn fx:id="poNumberCol"
@@ -285,8 +287,10 @@
                                    styleClass="table-view"
                                    VBox.vgrow="ALWAYS"
                                    prefHeight="320"
-                                   editable="true"
-                                   placeholder="No items added. Click '+ Add Item' above.">
+                                   editable="true">
+                            <placeholder>
+                                <Label text="No items added. Click '+ Add Item' above."/>
+                            </placeholder>
                             <columns>
                                 <TableColumn fx:id="poItemMedicineCol"
                                              text="MEDICINE"

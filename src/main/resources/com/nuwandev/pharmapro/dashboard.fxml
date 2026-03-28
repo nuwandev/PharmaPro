@@ -234,8 +234,10 @@
                 <TableView fx:id="expiringTable"
                            styleClass="table-view"
                            prefHeight="220"
-                           VBox.vgrow="ALWAYS"
-                           placeholder="No expiring medicines found">
+                           VBox.vgrow="ALWAYS">
+                    <placeholder>
+                        <Label text="No expiring medicines found"/>
+                    </placeholder>
                     <columns>
                         <TableColumn fx:id="expiryMedicineCol"
                                      text="MEDICINE"
@@ -279,8 +281,10 @@
                 <TableView fx:id="lowStockTable"
                            styleClass="table-view"
                            prefHeight="220"
-                           VBox.vgrow="ALWAYS"
-                           placeholder="All items are adequately stocked">
+                           VBox.vgrow="ALWAYS">
+                    <placeholder>
+                        <Label text="All items are adequately stocked"/>
+                    </placeholder>
                     <columns>
                         <TableColumn fx:id="lowStockMedicineCol"
                                      text="MEDICINE"
@@ -321,8 +325,10 @@
 
             <TableView fx:id="recentSalesTable"
                        styleClass="table-view"
-                       prefHeight="200"
-                       placeholder="No recent transactions">
+                       prefHeight="200">
+                <placeholder>
+                    <Label text="No recent transactions"/>
+                </placeholder>
                 <columns>
                     <TableColumn fx:id="saleReceiptCol"
                                  text="RECEIPT #"

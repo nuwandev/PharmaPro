@@ -370,8 +370,10 @@
             <!-- Data Table -->
             <TableView fx:id="reportDataTable"
                        styleClass="table-view"
-                       prefHeight="350"
-                       placeholder="No data. Generate a report to see results here.">
+                       prefHeight="350">
+                <placeholder>
+                    <Label text="No data. Generate a report to see results here."/>
+                </placeholder>
                 <columns>
                     <!-- Columns are added dynamically by the controller based on report type -->
                     <TableColumn fx:id="reportCol1" text="Column 1" prefWidth="160"/>

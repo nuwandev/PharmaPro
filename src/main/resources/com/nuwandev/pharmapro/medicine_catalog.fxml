@@ -126,8 +126,10 @@
                            styleClass="table-view"
                            VBox.vgrow="ALWAYS"
                            prefHeight="500"
-                           editable="false"
-                           placeholder="No medicines found. Click '+ Add Medicine' to get started.">
+                           editable="false">
+                    <placeholder>
+                        <Label text="No medicines found. Click '+ Add Medicine' to get started."/>
+                    </placeholder>
                     <columns>
 
                         <!-- Select column -->
@@ -300,8 +302,10 @@
                         <!-- Batch Table (embedded in drawer) -->
                         <TableView fx:id="drawerBatchTable"
                                    styleClass="table-view"
-                                   prefHeight="220"
-                                   placeholder="No batches recorded">
+                                   prefHeight="220">
+                            <placeholder>
+                                <Label text="No batches recorded"/>
+                            </placeholder>
                             <columns>
                                 <TableColumn fx:id="batchNumberCol" text="BATCH" prefWidth="90"/>
                                 <TableColumn fx:id="batchQtyCol" text="QTY" prefWidth="50"/>

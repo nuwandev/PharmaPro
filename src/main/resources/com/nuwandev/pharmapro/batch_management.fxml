@@ -143,8 +143,10 @@
         <TableView fx:id="batchTable"
                    styleClass="table-view"
                    VBox.vgrow="ALWAYS"
-                   prefHeight="450"
-                   placeholder="No batches found.">
+                   prefHeight="450">
+            <placeholder>
+                <Label text="No batches found."/>
+            </placeholder>
             <columns>
 
                 <TableColumn fx:id="batchMedicineNameCol"
