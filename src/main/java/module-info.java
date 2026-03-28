@@ -6,6 +6,7 @@ module com.nuwandev.pharmapro {
     requires java.sql;
     requires flyway.core;
     requires io.github.cdimascio.dotenv.java;
+    requires jbcrypt;
 
     opens com.nuwandev.pharmapro.app to javafx.graphics;
 
