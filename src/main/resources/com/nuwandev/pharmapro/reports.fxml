@@ -15,7 +15,9 @@
         fitToWidth="true"
         hbarPolicy="NEVER"
         vbarPolicy="AS_NEEDED"
-        style="-fx-background-color: transparent; -fx-border-color: transparent;">
+        style="-fx-background-color: transparent; -fx-border-color: transparent;"
+        prefViewportWidth="1100" prefViewportHeight="700"
+        minWidth="800" minHeight="500">
 
     <VBox spacing="24" style="-fx-padding: 4px 0 24px 0;">
 

@@ -12,7 +12,9 @@
         fx:controller="com.nuwandev.pharmapro.ui.SupplierController"
         fx:id="supplierRoot"
         style="-fx-background-color: #f5f5f5;"
-        stylesheets="@css/pharmapro.css">
+        stylesheets="@css/pharmapro.css"
+        prefWidth="1100" prefHeight="700"
+        minWidth="800" minHeight="500">
 
     <!-- ══ Main Content ══════════════════════════════════════ -->
     <VBox spacing="0">

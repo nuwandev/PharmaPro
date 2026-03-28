@@ -14,7 +14,9 @@
         fx:id="medicineFormRoot"
         spacing="0"
         style="-fx-background-color: white; -fx-background-radius: 14px;"
-        stylesheets="@css/pharmapro.css">
+        stylesheets="@css/pharmapro.css"
+        prefWidth="600" prefHeight="600"
+        minWidth="400" minHeight="400">
 
     <!-- ── Header ──────────────────────────────────────────── -->
     <HBox fx:id="formHeader"

@@ -14,7 +14,9 @@
         fx:id="settingsRoot"
         spacing="0"
         style="-fx-background-color: #f5f5f5;"
-        stylesheets="@css/pharmapro.css">
+        stylesheets="@css/pharmapro.css"
+        prefWidth="900" prefHeight="700"
+        minWidth="700" minHeight="500">
 
     <!-- ── Settings Header ──────────────────────────────────── -->
     <HBox alignment="CENTER_LEFT" spacing="0"
@@ -296,7 +298,7 @@
 
                         <TableView fx:id="reorderRulesTable"
                                    styleClass="table-view"
-                                   prefHeight="260">
+ e                                   prefHeight="260">
                             <placeholder>
                                 <Label text="No custom rules. Using global defaults."/>
                             </placeholder>

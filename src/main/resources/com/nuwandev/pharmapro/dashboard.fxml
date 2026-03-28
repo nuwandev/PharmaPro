@@ -16,7 +16,9 @@
         fitToWidth="true"
         hbarPolicy="NEVER"
         vbarPolicy="AS_NEEDED"
-        style="-fx-background-color: transparent; -fx-border-color: transparent;">
+        style="-fx-background-color: transparent; -fx-border-color: transparent;"
+        prefViewportWidth="1200" prefViewportHeight="800"
+        minWidth="900" minHeight="600">
 
     <VBox fx:id="dashboardRoot"
           spacing="24"

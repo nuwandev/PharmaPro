@@ -13,8 +13,8 @@
         fx:controller="com.nuwandev.pharmapro.ui.MainLayoutController"
         fx:id="mainRoot"
         stylesheets="@css/pharmapro.css"
-        prefWidth="1280" prefHeight="800"
-        minWidth="900" minHeight="600">
+        prefWidth="1600" prefHeight="1000"
+        minWidth="1200" minHeight="700">
 
     <!-- ══════════════════════════════════════════════
          LEFT SIDEBAR
