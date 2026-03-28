@@ -14,9 +14,9 @@
         fx:id="loginRoot"
         styleClass="login-root"
         stylesheets="@css/pharmapro.css"
-        prefWidth="420" prefHeight="640"
-        minWidth="320" minHeight="480"
-        maxWidth="600" maxHeight="900">
+        prefWidth="950" prefHeight="700"
+        minWidth="600" minHeight="500"
+        maxWidth="1200" maxHeight="900">
 
     <!-- Full-screen gradient background -->
     <VBox alignment="CENTER" spacing="0">

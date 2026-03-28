@@ -1,6 +1,5 @@
 package com.nuwandev.pharmapro.app;
 
-
 import com.nuwandev.pharmapro.database.DatabaseContext;
 import com.nuwandev.pharmapro.model.User;
 import com.nuwandev.pharmapro.repository.UserRepository;
@@ -23,8 +22,7 @@ public class PharmaProApplication extends Application {
         String title;
         boolean isMain = false;
         if (rememberedUsername != null && !rememberedUsername.isBlank()) {
-            UserRepository userRepository = new UserRepository(
-                    DatabaseContext.getDataSource());
+            UserRepository userRepository = new UserRepository(DatabaseContext.getDataSource());
             Optional<User> userOpt = userRepository.findByUsername(rememberedUsername.trim());
             if (userOpt.isPresent()) {
                 SessionContext.setUser(userOpt.get());
@@ -43,19 +41,17 @@ public class PharmaProApplication extends Application {
             title = "PharmaPro Login";
         }
 
-        Scene scene;
-        if (isMain) {
-            scene = new Scene(root, 1280, 800);
-            stage.setMinWidth(900);
-            stage.setMinHeight(600);
-            stage.setResizable(true);
-        } else {
-            scene = new Scene(root, 420, 640);
-            stage.setResizable(false);
-        }
+        Scene scene = new Scene(root);
         stage.setTitle(title);
         stage.setScene(scene);
-        stage.centerOnScreen();
+        if (isMain) {
+            stage.setResizable(true);
+            stage.setMaximized(true);
+        } else {
+            stage.setResizable(false);
+            stage.sizeToScene();
+            stage.centerOnScreen();
+        }
         stage.show();
     }
 }

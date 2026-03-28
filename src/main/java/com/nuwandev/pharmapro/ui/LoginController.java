@@ -121,7 +121,8 @@ public class LoginController {
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.getScene().setRoot(root);
             stage.setTitle("PharmaPro");
-            stage.sizeToScene();
+            stage.setResizable(true);
+            stage.setMaximized(true);
         } catch (IOException e) {
             showGlobalError("Login worked, but dashboard failed to load. Please contact support.");
             e.printStackTrace();
