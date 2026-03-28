@@ -7,6 +7,7 @@ module com.nuwandev.pharmapro {
     requires flyway.core;
     requires io.github.cdimascio.dotenv.java;
     requires jbcrypt;
+    requires java.desktop;
 
     opens com.nuwandev.pharmapro.app to javafx.graphics;
 

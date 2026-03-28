@@ -1,7 +1,9 @@
 package com.nuwandev.pharmapro.session;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class SessionStorage {
 
@@ -31,6 +33,7 @@ public class SessionStorage {
     public static void clear() {
         try {
             Files.deleteIfExists(PATH);
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 }

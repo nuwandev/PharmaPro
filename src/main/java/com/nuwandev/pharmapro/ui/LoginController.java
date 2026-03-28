@@ -114,6 +114,7 @@ public class LoginController {
     }
 
     private void openDashboard() {
+        System.out.println("openDashboard() called"); // Debug print
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/main_layout.fxml"));
             Parent root = loader.load();
@@ -126,6 +127,12 @@ public class LoginController {
         } catch (IOException e) {
             showGlobalError("Login worked, but dashboard failed to load. Please contact support.");
             e.printStackTrace();
+            // Show error dialog for debugging
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Dashboard Load Error");
+            alert.setHeaderText("Failed to load dashboard");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
         }
     }
 
