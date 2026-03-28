@@ -15,18 +15,26 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class LoginController {
     @FXML
+    @SuppressWarnings("unused")
     private StackPane loginRoot;
     @FXML
+    @SuppressWarnings("unused")
     private VBox loginCard;
     @FXML
+    @SuppressWarnings("unused")
     private StackPane logoContainer;
     @FXML
+    @SuppressWarnings("unused")
     private Label appNameLabel;
     @FXML
+    @SuppressWarnings("unused")
     private Label appTaglineLabel;
     @FXML
     private TextField usernameField;
@@ -53,17 +61,32 @@ public class LoginController {
 
     private final AuthService authService = ServiceFactory.authService();
 
+    // Use a single SecureRandom instance for efficiency and security
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
+
+    private static String generateToken() {
+        return new BigInteger(130, SECURE_RANDOM).toString(32);
+    }
+
     @FXML
     private void initialize() {
+        // Hide overlays and banners initially
         loadingOverlay.setVisible(false);
         loadingOverlay.setManaged(false);
         errorBanner.setVisible(false);
         errorBanner.setManaged(false);
 
-        String rememberedUsername = SessionStorage.load();
-        if (rememberedUsername != null && !rememberedUsername.isBlank()) {
-            usernameField.setText(rememberedUsername);
-            rememberMeCheckBox.setSelected(true);
+        // Attempt auto-login with remember me token
+        String token = SessionStorage.loadToken();
+        if (token != null && !token.isBlank()) {
+            Optional<User> userOpt = authService.findByRememberMeToken(token.trim());
+            if (userOpt.isPresent()) {
+                SessionContext.setUser(userOpt.get());
+                openDashboard();
+            } else {
+                SessionStorage.clear();
+            }
         }
     }
 
@@ -72,8 +95,8 @@ public class LoginController {
         clearErrors();
         setBusy(true);
 
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+        final String username = usernameField.getText();
+        final String password = passwordField.getText();
 
         Task<Optional<User>> task = new Task<>() {
             @Override
@@ -84,22 +107,21 @@ public class LoginController {
 
         task.setOnSucceeded(e -> {
             setBusy(false);
-
             Optional<User> userOpt = task.getValue();
             if (userOpt.isEmpty()) {
                 showGlobalError("Invalid username or password.");
                 return;
             }
-
             User user = userOpt.get();
             SessionContext.setUser(user);
-
             if (rememberMeCheckBox.isSelected()) {
-                SessionStorage.save(user.username());
+                String token = generateToken();
+                authService.updateRememberMeToken(user.id(), token);
+                SessionStorage.saveToken(token);
             } else {
+                authService.updateRememberMeToken(user.id(), null);
                 SessionStorage.clear();
             }
-
             openDashboard();
         });
 
@@ -114,11 +136,9 @@ public class LoginController {
     }
 
     private void openDashboard() {
-        System.out.println("openDashboard() called"); // Debug print
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/main_layout.fxml"));
             Parent root = loader.load();
-
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.getScene().setRoot(root);
             stage.setTitle("PharmaPro");
@@ -126,8 +146,7 @@ public class LoginController {
             stage.setMaximized(true);
         } catch (IOException e) {
             showGlobalError("Login worked, but dashboard failed to load. Please contact support.");
-            e.printStackTrace();
-            // Show error dialog for debugging
+            LOGGER.severe("Failed to load dashboard: " + e.getMessage());
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Dashboard Load Error");
             alert.setHeaderText("Failed to load dashboard");

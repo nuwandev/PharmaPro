@@ -28,4 +28,13 @@ public class AuthService {
 
         return Optional.of(user);
     }
+
+    public Optional<User> findByRememberMeToken(String token) {
+        if (token == null || token.isBlank()) return Optional.empty();
+        return userRepository.findByRememberMeToken(token.trim());
+    }
+
+    public void updateRememberMeToken(Long userId, String token) {
+        userRepository.updateRememberMeToken(userId, token);
+    }
 }
