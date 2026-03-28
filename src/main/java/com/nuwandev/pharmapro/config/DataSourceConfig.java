@@ -13,9 +13,9 @@ public final class DataSourceConfig {
     public static DataSource create() {
         Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
-        String url = value(dotenv, "DB_URL", "jdbc:postgresql://localhost:5432/pharmapro");
-        String user = value(dotenv, "DB_USER", "postgres");
-        String pass = value(dotenv, "DB_PASSWORD", "password");
+        String url = value(dotenv, "DB_URL");
+        String user = value(dotenv, "DB_USER");
+        String pass = value(dotenv, "DB_PASSWORD");
 
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
@@ -27,8 +27,11 @@ public final class DataSourceConfig {
         return new HikariDataSource(config);
     }
 
-    private static String value(Dotenv dotenv, String key, String fallback) {
+    private static String value(Dotenv dotenv, String key) {
         String envValue = dotenv.get(key);
-        return (envValue == null || envValue.isBlank()) ? fallback : envValue;
+        if (envValue == null || envValue.isBlank()) {
+            throw new IllegalStateException("Required environment variable '" + key + "' is missing or empty. Application cannot start.");
+        }
+        return envValue;
     }
 }
