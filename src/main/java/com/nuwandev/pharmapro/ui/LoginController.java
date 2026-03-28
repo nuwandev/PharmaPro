@@ -21,6 +21,10 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 public class LoginController {
+    // Use a single SecureRandom instance for efficiency and security
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
+    private final AuthService authService = ServiceFactory.authService();
     @FXML
     @SuppressWarnings("unused")
     private StackPane loginRoot;
@@ -59,15 +63,11 @@ public class LoginController {
     @FXML
     private ProgressIndicator loginProgress;
 
-    private final AuthService authService = ServiceFactory.authService();
-
-    // Use a single SecureRandom instance for efficiency and security
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-    private static final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
-
     private static String generateToken() {
         return new BigInteger(130, SECURE_RANDOM).toString(32);
     }
+
+    private boolean shouldAutoLogin = false;
 
     @FXML
     private void initialize() {
@@ -83,11 +83,19 @@ public class LoginController {
             Optional<User> userOpt = authService.findByRememberMeToken(token.trim());
             if (userOpt.isPresent()) {
                 SessionContext.setUser(userOpt.get());
-                openDashboard();
+                shouldAutoLogin = true;
             } else {
                 SessionStorage.clear();
             }
         }
+
+        // Defer openDashboard() until scene is available
+        loginButton.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null && shouldAutoLogin) {
+                shouldAutoLogin = false;
+                openDashboard();
+            }
+        });
     }
 
     @FXML
@@ -136,6 +144,11 @@ public class LoginController {
     }
 
     private void openDashboard() {
+        if (loginButton.getScene() == null || loginButton.getScene().getWindow() == null) {
+            // Defer until window is available
+            javafx.application.Platform.runLater(this::openDashboard);
+            return;
+        }
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/main_layout.fxml"));
             Parent root = loader.load();

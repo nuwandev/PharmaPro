@@ -298,7 +298,7 @@
 
                         <TableView fx:id="reorderRulesTable"
                                    styleClass="table-view"
- e                                   prefHeight="260">
+                                   e prefHeight="260">
                             <placeholder>
                                 <Label text="No custom rules. Using global defaults."/>
                             </placeholder>

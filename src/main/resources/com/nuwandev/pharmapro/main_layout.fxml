@@ -6,20 +6,12 @@
     Controller: com.nuwandev.pharmapro.ui.MainLayoutController
 -->
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.Group?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-
-<BorderPane fx:id="mainRoot" minHeight="700" minWidth="1200" prefHeight="1000" prefWidth="1600" stylesheets="@css/pharmapro.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nuwandev.pharmapro.ui.MainLayoutController">
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainRoot" minHeight="700" minWidth="1200" prefHeight="1000"
+            prefWidth="1600" stylesheets="@css/pharmapro.css" xmlns="http://javafx.com/javafx/21.0.6"
+            fx:controller="com.nuwandev.pharmapro.ui.MainLayoutController">
 
     <!-- ══════════════════════════════════════════════
          LEFT SIDEBAR
@@ -31,73 +23,85 @@
             <HBox fx:id="sidebarBrand" alignment="CENTER_LEFT" spacing="12" styleClass="sidebar-brand">
                 <StackPane prefHeight="40" prefWidth="40" styleClass="sidebar-brand-icon">
                     <!-- Logo placeholder -->
-                    <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;" text="Rx" />
+                    <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;" text="Rx"/>
                 </StackPane>
                 <VBox spacing="2">
-                    <Label styleClass="sidebar-brand-name" text="PharmaPro" />
-                    <Label styleClass="sidebar-brand-tagline" text="POS &amp; Inventory" />
+                    <Label styleClass="sidebar-brand-name" text="PharmaPro"/>
+                    <Label styleClass="sidebar-brand-tagline" text="POS &amp; Inventory"/>
                 </VBox>
             </HBox>
 
             <!-- Navigation Items (ScrollPane for overflow) -->
-            <ScrollPane fx:id="sidebarScrollPane" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
-                <VBox fx:id="navContainer" spacing="2" style="-fx-padding: 12px 16px 12px 16px; -fx-background-color: transparent;">
+            <ScrollPane fx:id="sidebarScrollPane" fitToWidth="true" hbarPolicy="NEVER"
+                        style="-fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED"
+                        VBox.vgrow="ALWAYS">
+                <VBox fx:id="navContainer" spacing="2"
+                      style="-fx-padding: 12px 16px 12px 16px; -fx-background-color: transparent;">
 
                     <!-- MAIN SECTION -->
-                    <Label style="-fx-padding: 4px 4px 6px 4px;" styleClass="sidebar-section-label" text="MAIN" />
+                    <Label style="-fx-padding: 4px 4px 6px 4px;" styleClass="sidebar-section-label" text="MAIN"/>
 
-                    <Button fx:id="navDashboard" maxWidth="Infinity" onAction="#navigateToDashboard" styleClass="nav-item, nav-item-active" text="Dashboard">
+                    <Button fx:id="navDashboard" maxWidth="Infinity" onAction="#navigateToDashboard"
+                            styleClass="nav-item, nav-item-active" text="Dashboard">
                         <graphic>
                             <!-- Icon placeholder: replace with FontAwesome or SVG icon -->
-                            <Label style="-fx-font-size: 16px; -fx-text-fill: inherit;" text="⊞" />
+                            <Label style="-fx-font-size: 16px; -fx-text-fill: inherit;" text="⊞"/>
                         </graphic>
                     </Button>
 
-                    <Button fx:id="navPOS" maxWidth="Infinity" onAction="#navigateToPOS" styleClass="nav-item" text="Point of Sale">
+                    <Button fx:id="navPOS" maxWidth="Infinity" onAction="#navigateToPOS" styleClass="nav-item"
+                            text="Point of Sale">
                         <graphic>
-                            <Label style="-fx-font-size: 15px;" text="🛒" />
+                            <Label style="-fx-font-size: 15px;" text="🛒"/>
                         </graphic>
                     </Button>
 
                     <!-- INVENTORY SECTION -->
-                    <Label style="-fx-padding: 16px 4px 6px 4px;" styleClass="sidebar-section-label" text="INVENTORY" />
+                    <Label style="-fx-padding: 16px 4px 6px 4px;" styleClass="sidebar-section-label" text="INVENTORY"/>
 
-                    <Button fx:id="navMedicines" maxWidth="Infinity" onAction="#navigateToMedicines" styleClass="nav-item" text="Medicines">
+                    <Button fx:id="navMedicines" maxWidth="Infinity" onAction="#navigateToMedicines"
+                            styleClass="nav-item" text="Medicines">
                         <graphic>
-                            <Label style="-fx-font-size: 15px;" text="💊" />
+                            <Label style="-fx-font-size: 15px;" text="💊"/>
                         </graphic>
                     </Button>
 
-                    <Button fx:id="navBatches" maxWidth="Infinity" onAction="#navigateToBatches" styleClass="nav-item" text="Batch Management">
+                    <Button fx:id="navBatches" maxWidth="Infinity" onAction="#navigateToBatches" styleClass="nav-item"
+                            text="Batch Management">
                         <graphic>
-                            <Label style="-fx-font-size: 15px;" text="📦" />
+                            <Label style="-fx-font-size: 15px;" text="📦"/>
                         </graphic>
                     </Button>
 
-                    <Button fx:id="navPurchaseOrders" maxWidth="Infinity" onAction="#navigateToPurchaseOrders" styleClass="nav-item" text="Purchase Orders">
+                    <Button fx:id="navPurchaseOrders" maxWidth="Infinity" onAction="#navigateToPurchaseOrders"
+                            styleClass="nav-item" text="Purchase Orders">
                         <graphic>
-                            <Label style="-fx-font-size: 15px;" text="📋" />
+                            <Label style="-fx-font-size: 15px;" text="📋"/>
                         </graphic>
                     </Button>
 
-                    <Button fx:id="navSuppliers" maxWidth="Infinity" onAction="#navigateToSuppliers" styleClass="nav-item" text="Suppliers">
+                    <Button fx:id="navSuppliers" maxWidth="Infinity" onAction="#navigateToSuppliers"
+                            styleClass="nav-item" text="Suppliers">
                         <graphic>
-                            <Label style="-fx-font-size: 15px;" text="🏭" />
+                            <Label style="-fx-font-size: 15px;" text="🏭"/>
                         </graphic>
                     </Button>
 
                     <!-- REPORTS SECTION -->
-                    <Label style="-fx-padding: 16px 4px 6px 4px;" styleClass="sidebar-section-label" text="REPORTS &amp; SETTINGS" />
+                    <Label style="-fx-padding: 16px 4px 6px 4px;" styleClass="sidebar-section-label"
+                           text="REPORTS &amp; SETTINGS"/>
 
-                    <Button fx:id="navReports" maxWidth="Infinity" onAction="#navigateToReports" styleClass="nav-item" text="Reports">
+                    <Button fx:id="navReports" maxWidth="Infinity" onAction="#navigateToReports" styleClass="nav-item"
+                            text="Reports">
                         <graphic>
-                            <Label style="-fx-font-size: 15px;" text="📊" />
+                            <Label style="-fx-font-size: 15px;" text="📊"/>
                         </graphic>
                     </Button>
 
-                    <Button fx:id="navSettings" maxWidth="Infinity" onAction="#navigateToSettings" styleClass="nav-item" text="Settings">
+                    <Button fx:id="navSettings" maxWidth="Infinity" onAction="#navigateToSettings" styleClass="nav-item"
+                            text="Settings">
                         <graphic>
-                            <Label style="-fx-font-size: 15px;" text="⚙" />
+                            <Label style="-fx-font-size: 15px;" text="⚙"/>
                         </graphic>
                     </Button>
 
@@ -108,15 +112,20 @@
             <VBox fx:id="sidebarFooter" spacing="12" styleClass="sidebar-footer">
                 <HBox alignment="CENTER_LEFT" spacing="10">
                     <StackPane styleClass="user-avatar">
-                        <Label fx:id="sidebarUserInitials" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;" text="AK" />
+                        <Label fx:id="sidebarUserInitials"
+                               style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;" text="AK"/>
                     </StackPane>
                     <VBox spacing="1" HBox.hgrow="ALWAYS">
-                        <Label fx:id="sidebarUserName" style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #e5e7eb;" text="Admin User" />
-                        <Label fx:id="sidebarUserRole" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" text="Administrator" />
+                        <Label fx:id="sidebarUserName"
+                               style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #e5e7eb;"
+                               text="Admin User"/>
+                        <Label fx:id="sidebarUserRole" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"
+                               text="Administrator"/>
                     </VBox>
-                     <Button fx:id="logoutBtn" onAction="#handleLogout" style="-fx-text-fill: #6b7280; -fx-font-size: 16px;" styleClass="btn-icon" text="⇥">
+                    <Button fx:id="logoutBtn" onAction="#handleLogout"
+                            style="-fx-text-fill: #6b7280; -fx-font-size: 16px;" styleClass="btn-icon" text="⇥">
                         <tooltip>
-                            <Tooltip text="Logout" />
+                            <Tooltip text="Logout"/>
                         </tooltip>
                     </Button>
                 </HBox>
@@ -136,60 +145,68 @@
 
                 <!-- Page Title (updated dynamically) -->
                 <VBox alignment="CENTER_LEFT" spacing="2" HBox.hgrow="ALWAYS">
-                    <Label fx:id="topbarPageTitle" styleClass="topbar-page-title" text="Dashboard" />
-                    <Label fx:id="topbarBreadcrumb" styleClass="caption-text" text="Home / Dashboard" />
+                    <Label fx:id="topbarPageTitle" styleClass="topbar-page-title" text="Dashboard"/>
+                    <Label fx:id="topbarBreadcrumb" styleClass="caption-text" text="Home / Dashboard"/>
                 </VBox>
 
                 <!-- Spacer -->
-                <Region HBox.hgrow="ALWAYS" />
+                <Region HBox.hgrow="ALWAYS"/>
 
                 <!-- Global Search -->
                 <StackPane alignment="CENTER_LEFT">
-                    <TextField fx:id="globalSearchField" alignment="CENTER_RIGHT" promptText="Quick search…" styleClass="topbar-search" />
-                    <Label mouseTransparent="true" style="-fx-padding: 0 0 0 10px; -fx-font-size: 14px; -fx-text-fill: #9ca3af;" text="🔍" />
+                    <TextField fx:id="globalSearchField" alignment="CENTER_RIGHT" promptText="Quick search…"
+                               styleClass="topbar-search"/>
+                    <Label mouseTransparent="true"
+                           style="-fx-padding: 0 0 0 10px; -fx-font-size: 14px; -fx-text-fill: #9ca3af;" text="🔍"/>
                 </StackPane>
 
                 <!-- Notifications Bell -->
                 <StackPane>
-               <Group>
-                  <children>
-                          <Button fx:id="notificationBtn" layoutX="4.0" layoutY="13.0" onAction="#showNotifications" styleClass="notif-btn">
-                              <graphic>
-                                  <Label style="-fx-font-size: 16px;" text="🔔" />
-                              </graphic>
-                              <tooltip>
-                                  <Tooltip text="Notifications" />
-                              </tooltip>
-                          </Button>
-                          <Label fx:id="notifBadge" layoutX="18.0" layoutY="17.0" styleClass="notif-badge" text="3" translateX="10" translateY="-8" visible="true" />
-                  </children>
-               </Group>
+                    <Group>
+                        <children>
+                            <Button fx:id="notificationBtn" layoutX="4.0" layoutY="13.0" onAction="#showNotifications"
+                                    styleClass="notif-btn">
+                                <graphic>
+                                    <Label style="-fx-font-size: 16px;" text="🔔"/>
+                                </graphic>
+                                <tooltip>
+                                    <Tooltip text="Notifications"/>
+                                </tooltip>
+                            </Button>
+                            <Label fx:id="notifBadge" layoutX="18.0" layoutY="17.0" styleClass="notif-badge" text="3"
+                                   translateX="10" translateY="-8" visible="true"/>
+                        </children>
+                    </Group>
                 </StackPane>
 
                 <!-- Divider -->
-                <Separator opacity="0.3" orientation="VERTICAL" prefHeight="32" />
+                <Separator opacity="0.3" orientation="VERTICAL" prefHeight="32"/>
 
                 <!-- User Profile -->
-                <HBox fx:id="userProfileBox" alignment="CENTER" onMouseClicked="#showUserMenu" spacing="10" style="-fx-cursor: hand; -fx-padding: 4px 8px; -fx-background-radius: 8px;">
+                <HBox fx:id="userProfileBox" alignment="CENTER" onMouseClicked="#showUserMenu" spacing="10"
+                      style="-fx-cursor: hand; -fx-padding: 4px 8px; -fx-background-radius: 8px;">
                     <StackPane styleClass="user-avatar">
-                        <Label fx:id="topbarUserInitials" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;" text="AK" />
+                        <Label fx:id="topbarUserInitials"
+                               style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;" text="AK"/>
                     </StackPane>
-                    <VBox spacing="1" />
-               <Group>
-                  <children>
-                           <Label fx:id="topbarUserName" styleClass="user-name-label" text="Admin User" />
-                           <Label fx:id="topbarUserRole" layoutY="19.200000762939453" prefHeight="14.0" prefWidth="70.0" styleClass="user-role-label" text="Administrator" />
-                  </children>
-               </Group>
-                    <Label style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" text="▾" />
+                    <VBox spacing="1"/>
+                    <Group>
+                        <children>
+                            <Label fx:id="topbarUserName" styleClass="user-name-label" text="Admin User"/>
+                            <Label fx:id="topbarUserRole" layoutY="19.200000762939453" prefHeight="14.0"
+                                   prefWidth="70.0" styleClass="user-role-label" text="Administrator"/>
+                        </children>
+                    </Group>
+                    <Label style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" text="▾"/>
                 </HBox>
 
             </HBox>
 
             <!-- MAIN CONTENT AREA (dynamic screen injection) -->
-            <StackPane fx:id="contentArea" style="-fx-background-color: #f5f5f5;" styleClass="content-area" VBox.vgrow="ALWAYS">
+            <StackPane fx:id="contentArea" style="-fx-background-color: #f5f5f5;" styleClass="content-area"
+                       VBox.vgrow="ALWAYS">
                 <!-- Screens are loaded here dynamically by MainLayoutController -->
-                <Label fx:id="contentPlaceholder" styleClass="muted-text" text="Loading…" />
+                <Label fx:id="contentPlaceholder" styleClass="muted-text" text="Loading…"/>
             </StackPane>
 
         </VBox>
@@ -200,9 +217,11 @@
     ══════════════════════════════════════════════ -->
     <!-- Notification popup (toggled programmatically) -->
     <top>
-        <StackPane fx:id="toastContainer" alignment="TOP_RIGHT" managed="false" mouseTransparent="true" style="-fx-padding: 70px 24px 0 0;" visible="false">
-            <VBox fx:id="toastBox" spacing="8" style="-fx-background-color: white; -fx-background-radius: 10px;                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 16, 0, 0, 4);                          -fx-padding: 12px 16px; -fx-max-width: 300px;">
-                <Label fx:id="toastMessage" styleClass="body-text" text="Operation completed" wrapText="true" />
+        <StackPane fx:id="toastContainer" alignment="TOP_RIGHT" managed="false" mouseTransparent="true"
+                   style="-fx-padding: 70px 24px 0 0;" visible="false">
+            <VBox fx:id="toastBox" spacing="8"
+                  style="-fx-background-color: white; -fx-background-radius: 10px;                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 16, 0, 0, 4);                          -fx-padding: 12px 16px; -fx-max-width: 300px;">
+                <Label fx:id="toastMessage" styleClass="body-text" text="Operation completed" wrapText="true"/>
             </VBox>
         </StackPane>
     </top>
