@@ -1,6 +1,10 @@
 package com.nuwandev.pharmapro.ui;
 
+import com.nuwandev.pharmapro.session.SessionContext;
+import com.nuwandev.pharmapro.session.SessionStorage;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -9,6 +13,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class MainLayoutController {
     @FXML
@@ -112,6 +119,22 @@ public class MainLayoutController {
 
     @FXML
     private void handleLogout() {
+        // Clear session
+        SessionContext.clear();
+        SessionStorage.clear();
+        // Redirect to login screen
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/login.fxml"));
+            Parent loginRoot = loader.load();
+            Stage stage = (Stage) mainRoot.getScene().getWindow();
+            stage.getScene().setRoot(loginRoot);
+            stage.setTitle("PharmaPro Login");
+            stage.setResizable(false);
+            stage.sizeToScene();
+            stage.centerOnScreen();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
