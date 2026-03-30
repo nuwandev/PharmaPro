@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    PharmaPro – Login Screen
+    Controller: com.nuwandev.pharmapro.ui.LoginController
+-->
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<StackPane
+        xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/21.0.6"
+        fx:controller="com.nuwandev.pharmapro.ui.LoginController"
+        fx:id="loginRoot"
+        styleClass="login-root"
+        stylesheets="@css/pharmapro.css"
+        prefWidth="950" prefHeight="700"
+        minWidth="600" minHeight="500"
+        maxWidth="1200" maxHeight="900">
+
+    <!-- Full-screen gradient background -->
+    <VBox alignment="CENTER" spacing="0">
+
+        <!-- Decorative blurred circle top-left -->
+        <StackPane>
+            <Circle fx:id="bgCircleTop"
+                    radius="300"
+                    fill="rgba(255,255,255,0.05)"
+                    translateX="-250"
+                    translateY="-150"/>
+            <Circle fx:id="bgCircleBottom"
+                    radius="200"
+                    fill="rgba(255,255,255,0.05)"
+                    translateX="300"
+                    translateY="200"/>
+
+            <!-- Login Card -->
+            <VBox fx:id="loginCard"
+                  styleClass="login-card"
+                  alignment="TOP_CENTER"
+                  spacing="0">
+
+                <!-- Logo + Brand -->
+                <VBox alignment="CENTER" spacing="12">
+                    <StackPane fx:id="logoContainer"
+                               styleClass="login-logo-box"
+                               prefWidth="72" prefHeight="72"
+                               maxWidth="72" maxHeight="72">
+                        <!-- Logo placeholder: swap with ImageView once asset is ready -->
+                        <Label text="Rx"
+                               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                        <!-- Uncomment when logo asset is ready:
+                        <ImageView fx:id="logoImage"
+                                   fitWidth="48" fitHeight="48"
+                                   preserveRatio="true"
+                                   pickOnBounds="true">
+                            <image><Image url="@../images/logo.png"/></image>
+                        </ImageView>
+                        -->
+                    </StackPane>
+
+                    <VBox alignment="CENTER" spacing="4">
+                        <Label fx:id="appNameLabel"
+                               text="PharmaPro"
+                               styleClass="login-app-title"/>
+                        <Label fx:id="appTaglineLabel"
+                               text="Pharmacy Management System"
+                               styleClass="login-subtitle"/>
+                    </VBox>
+                </VBox>
+
+                <!-- Spacing -->
+                <Region prefHeight="32"/>
+
+                <!-- Form -->
+                <VBox spacing="16">
+
+                    <!-- Username -->
+                    <VBox spacing="6">
+                        <Label text="Username"
+                               styleClass="login-field-label"/>
+                        <TextField fx:id="usernameField"
+                                   styleClass="login-field"
+                                   promptText="Enter your username"
+                                   maxWidth="320"/>
+                        <Label fx:id="usernameErrorLabel"
+                               styleClass="login-error-label"
+                               text=""
+                               managed="false"
+                               visible="false"/>
+                    </VBox>
+
+                    <!-- Password -->
+                    <VBox spacing="6">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="Password"
+                                   styleClass="login-field-label"
+                                   HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="forgotPasswordLink"
+                                   text="Forgot password?"
+                                   style="-fx-text-fill: #0d9488; -fx-font-size: 12px; -fx-cursor: hand;"/>
+                        </HBox>
+                        <PasswordField fx:id="passwordField"
+                                       styleClass="login-field"
+                                       promptText="Enter your password"
+                                       maxWidth="320"/>
+                        <Label fx:id="passwordErrorLabel"
+                               styleClass="login-error-label"
+                               text=""
+                               managed="false"
+                               visible="false"/>
+                    </VBox>
+
+                    <!-- Remember Me -->
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <CheckBox fx:id="rememberMeCheckBox"
+                                  styleClass="body-text"/>
+                        <Label text="Remember me on this device"
+                               styleClass="caption-text"/>
+                    </HBox>
+
+                    <!-- Global Error Banner -->
+                    <StackPane fx:id="errorBanner"
+                               visible="false"
+                               managed="false"
+                               style="-fx-background-color: #fee2e2; -fx-background-radius: 8px; -fx-padding: 10px 14px;">
+                        <Label fx:id="errorBannerLabel"
+                               text="Invalid username or password."
+                               style="-fx-text-fill: #dc2626; -fx-font-size: 13px;"/>
+                    </StackPane>
+
+                    <!-- Login Button -->
+                    <Button fx:id="loginButton"
+                            text="Sign In"
+                            styleClass="login-btn"
+                            defaultButton="true"
+                            maxWidth="320"
+                            onAction="#handleLogin"/>
+
+                </VBox>
+
+                <!-- Spacing -->
+                <Region prefHeight="24"/>
+
+                <!-- Footer -->
+                <VBox alignment="CENTER" spacing="4">
+                    <Separator maxWidth="280" opacity="0.3"/>
+                    <Label text="v2.0.1  ·  © 2025 PharmaPro Inc."
+                           styleClass="caption-text"
+                           style="-fx-padding: 8px 0 0 0;"/>
+                </VBox>
+
+            </VBox>
+        </StackPane>
+    </VBox>
+
+    <!-- Loading Overlay (shown during login request) -->
+    <StackPane fx:id="loadingOverlay"
+               styleClass="modal-overlay"
+               visible="false"
+               managed="false">
+        <VBox alignment="CENTER" spacing="16"
+              style="-fx-background-color: white; -fx-background-radius: 12px; -fx-padding: 32px 40px;">
+            <ProgressIndicator fx:id="loginProgress"
+                               prefWidth="48" prefHeight="48"
+                               style="-fx-progress-color: #0d9488;"/>
+            <Label text="Signing in…"
+                   styleClass="body-text"/>
+        </VBox>
+    </StackPane>
+
+</StackPane>

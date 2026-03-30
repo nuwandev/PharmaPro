@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    PharmaPro – Reports Screen
+    Controller: com.nuwandev.pharmapro.ui.ReportsController
+-->
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<ScrollPane
+        xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/17"
+        fx:controller="com.nuwandev.pharmapro.ui.ReportsController"
+        fx:id="reportsScrollPane"
+        fitToWidth="true"
+        hbarPolicy="NEVER"
+        vbarPolicy="AS_NEEDED"
+        style="-fx-background-color: transparent; -fx-border-color: transparent;"
+        prefViewportWidth="1100" prefViewportHeight="700"
+        minWidth="800" minHeight="500">
+
+    <VBox spacing="24" style="-fx-padding: 4px 0 24px 0;">
+
+        <!-- ══ Report Filter Bar ═══════════════════════════════ -->
+        <VBox styleClass="card" spacing="16">
+
+            <Label text="Generate Reports"
+                   styleClass="title-small"/>
+
+            <HBox spacing="16" alignment="CENTER_LEFT" wrap="true">
+
+                <!-- Report Type -->
+                <VBox spacing="4" minWidth="180">
+                    <Label text="Report Type" styleClass="form-label"/>
+                    <ComboBox fx:id="reportTypeCombo"
+                              styleClass="combo-box"
+                              prefWidth="200" prefHeight="42"
+                              promptText="Select report type"/>
+                </VBox>
+
+                <!-- Date Range Preset -->
+                <VBox spacing="4" minWidth="150">
+                    <Label text="Date Range" styleClass="form-label"/>
+                    <ComboBox fx:id="dateRangePresetCombo"
+                              styleClass="combo-box"
+                              prefWidth="160" prefHeight="42"
+                              promptText="Custom"
+                              value="This Month"/>
+                </VBox>
+
+                <!-- From Date -->
+                <VBox spacing="4">
+                    <Label text="From" styleClass="form-label"/>
+                    <DatePicker fx:id="reportFromDate"
+                                styleClass="date-picker"
+                                prefWidth="150"/>
+                </VBox>
+
+                <!-- To Date -->
+                <VBox spacing="4">
+                    <Label text="To" styleClass="form-label"/>
+                    <DatePicker fx:id="reportToDate"
+                                styleClass="date-picker"
+                                prefWidth="150"/>
+                </VBox>
+
+                <!-- Category Filter -->
+                <VBox spacing="4">
+                    <Label text="Category" styleClass="form-label"/>
+                    <ComboBox fx:id="reportCategoryCombo"
+                              styleClass="combo-box"
+                              prefWidth="150" prefHeight="42"
+                              promptText="All"/>
+                </VBox>
+
+                <!-- Spacer -->
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Generate Button -->
+                <VBox alignment="BOTTOM_LEFT" spacing="4">
+                    <Label text=" " styleClass="form-label"/>
+                    <Button fx:id="generateReportBtn"
+                            text="▶  Generate Report"
+                            styleClass="btn-primary"
+                            prefHeight="42"
+                            onAction="#generateReport"/>
+                </VBox>
+
+            </HBox>
+
+            <!-- Quick Export Row -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Export As:" styleClass="caption-text"/>
+                <Button fx:id="exportPDFBtn"
+                        text="📄  Export PDF"
+                        styleClass="btn-secondary, btn-small"
+                        onAction="#exportPDF"/>
+                <Button fx:id="exportCSVBtn"
+                        text="📊  Export CSV"
+                        styleClass="btn-secondary, btn-small"
+                        onAction="#exportCSV"/>
+                <Button fx:id="exportExcelBtn"
+                        text="📋  Export Excel"
+                        styleClass="btn-secondary, btn-small"
+                        onAction="#exportExcel"/>
+                <Button fx:id="printReportBtn"
+                        text="🖨  Print"
+                        styleClass="btn-secondary, btn-small"
+                        onAction="#printReport"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lastGeneratedLabel"
+                       text="Last generated: —"
+                       styleClass="caption-text"/>
+            </HBox>
+
+        </VBox>
+
+        <!-- ══ Quick Report Cards ══════════════════════════════ -->
+        <VBox spacing="12">
+            <Label text="Quick Reports"
+                   styleClass="title-small"/>
+
+            <HBox spacing="16">
+
+                <!-- Sales Report -->
+                <VBox fx:id="salesReportCard"
+                      styleClass="report-card"
+                      spacing="14"
+                      HBox.hgrow="ALWAYS"
+                      onMouseClicked="#selectSalesReport">
+                    <StackPane styleClass="report-icon-box"
+                               style="-fx-background-color: #dbeafe;"
+                               maxWidth="52">
+                        <Label text="💰" style="-fx-font-size: 24px;"/>
+                    </StackPane>
+                    <VBox spacing="4">
+                        <Label text="Sales Report"
+                               styleClass="title-small"
+                               style="-fx-font-size: 15px;"/>
+                        <Label text="Daily, weekly, monthly breakdowns of all sales transactions."
+                               styleClass="caption-text"
+                               wrapText="true"/>
+                    </VBox>
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label fx:id="salesReportCount"
+                               text="0 transactions"
+                               style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #3b82f6;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="→" style="-fx-text-fill: #0d9488; -fx-font-size: 14px;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Stock Report -->
+                <VBox fx:id="stockReportCard"
+                      styleClass="report-card"
+                      spacing="14"
+                      HBox.hgrow="ALWAYS"
+                      onMouseClicked="#selectStockReport">
+                    <StackPane styleClass="report-icon-box"
+                               style="-fx-background-color: #ccfbf1;"
+                               maxWidth="52">
+                        <Label text="📦" style="-fx-font-size: 24px;"/>
+                    </StackPane>
+                    <VBox spacing="4">
+                        <Label text="Stock Report"
+                               styleClass="title-small"
+                               style="-fx-font-size: 15px;"/>
+                        <Label text="Current inventory levels, valuation, and stock movement history."
+                               styleClass="caption-text"
+                               wrapText="true"/>
+                    </VBox>
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label fx:id="stockReportCount"
+                               text="0 items"
+                               style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #0d9488;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="→" style="-fx-text-fill: #0d9488; -fx-font-size: 14px;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Expiry Report -->
+                <VBox fx:id="expiryReportCard"
+                      styleClass="report-card"
+                      spacing="14"
+                      HBox.hgrow="ALWAYS"
+                      onMouseClicked="#selectExpiryReport">
+                    <StackPane styleClass="report-icon-box"
+                               style="-fx-background-color: #fee2e2;"
+                               maxWidth="52">
+                        <Label text="📅" style="-fx-font-size: 24px;"/>
+                    </StackPane>
+                    <VBox spacing="4">
+                        <Label text="Expiry Report"
+                               styleClass="title-small"
+                               style="-fx-font-size: 15px;"/>
+                        <Label text="Expired and near-expiry batches sorted by urgency."
+                               styleClass="caption-text"
+                               wrapText="true"/>
+                    </VBox>
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label fx:id="expiryReportCount"
+                               text="0 batches"
+                               style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #ef4444;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="→" style="-fx-text-fill: #0d9488; -fx-font-size: 14px;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Low Stock Report -->
+                <VBox fx:id="lowStockReportCard"
+                      styleClass="report-card"
+                      spacing="14"
+                      HBox.hgrow="ALWAYS"
+                      onMouseClicked="#selectLowStockReport">
+                    <StackPane styleClass="report-icon-box"
+                               style="-fx-background-color: #fef3c7;"
+                               maxWidth="52">
+                        <Label text="⚠" style="-fx-font-size: 24px; -fx-text-fill: #f59e0b;"/>
+                    </StackPane>
+                    <VBox spacing="4">
+                        <Label text="Low Stock Report"
+                               styleClass="title-small"
+                               style="-fx-font-size: 15px;"/>
+                        <Label text="Medicines below reorder level requiring immediate restock."
+                               styleClass="caption-text"
+                               wrapText="true"/>
+                    </VBox>
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label fx:id="lowStockReportCount"
+                               text="0 items"
+                               style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="→" style="-fx-text-fill: #0d9488; -fx-font-size: 14px;"/>
+                    </HBox>
+                </VBox>
+
+            </HBox>
+
+            <!-- Second row -->
+            <HBox spacing="16">
+
+                <!-- Purchase Orders Report -->
+                <VBox fx:id="poReportCard"
+                      styleClass="report-card"
+                      spacing="14"
+                      HBox.hgrow="ALWAYS"
+                      onMouseClicked="#selectPOReport">
+                    <StackPane styleClass="report-icon-box"
+                               style="-fx-background-color: #ede9fe;"
+                               maxWidth="52">
+                        <Label text="🏭" style="-fx-font-size: 24px;"/>
+                    </StackPane>
+                    <VBox spacing="4">
+                        <Label text="Purchase Orders" styleClass="title-small" style="-fx-font-size: 15px;"/>
+                        <Label text="All POs with amounts, statuses, and supplier breakdown."
+                               styleClass="caption-text" wrapText="true"/>
+                    </VBox>
+                    <HBox alignment="CENTER_RIGHT">
+                        <Label text="→" style="-fx-text-fill: #0d9488; -fx-font-size: 14px;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Profit & Loss Report -->
+                <VBox fx:id="profitReportCard"
+                      styleClass="report-card"
+                      spacing="14"
+                      HBox.hgrow="ALWAYS"
+                      onMouseClicked="#selectProfitReport">
+                    <StackPane styleClass="report-icon-box"
+                               style="-fx-background-color: #d1fae5;"
+                               maxWidth="52">
+                        <Label text="📈" style="-fx-font-size: 24px;"/>
+                    </StackPane>
+                    <VBox spacing="4">
+                        <Label text="Profit &amp; Loss" styleClass="title-small" style="-fx-font-size: 15px;"/>
+                        <Label text="Revenue vs cost analysis, gross margin by medicine category."
+                               styleClass="caption-text" wrapText="true"/>
+                    </VBox>
+                    <HBox alignment="CENTER_RIGHT">
+                        <Label text="→" style="-fx-text-fill: #0d9488; -fx-font-size: 14px;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Spacer cards for even grid -->
+                <Region HBox.hgrow="ALWAYS"/>
+                <Region HBox.hgrow="ALWAYS"/>
+
+            </HBox>
+        </VBox>
+
+        <!-- ══ Report Preview / Results Area ═══════════════════ -->
+        <VBox fx:id="reportResultsArea"
+              styleClass="card"
+              spacing="0">
+
+            <!-- Results Header -->
+            <HBox styleClass="card-header" alignment="CENTER_LEFT" spacing="0">
+                <VBox HBox.hgrow="ALWAYS" spacing="2">
+                    <Label fx:id="reportResultTitle"
+                           text="Report Results"
+                           styleClass="card-title"/>
+                    <Label fx:id="reportResultMeta"
+                           text="Select a report type and click Generate"
+                           styleClass="caption-text"/>
+                </VBox>
+                <HBox spacing="8">
+                    <Button fx:id="exportResultPDFBtn"
+                            text="📄 PDF"
+                            styleClass="btn-secondary, btn-small"
+                            onAction="#exportResultPDF"/>
+                    <Button fx:id="exportResultCSVBtn"
+                            text="📊 CSV"
+                            styleClass="btn-secondary, btn-small"
+                            onAction="#exportResultCSV"/>
+                </HBox>
+            </HBox>
+
+            <!-- Chart Area (shown for visual reports) -->
+            <StackPane fx:id="reportChartArea"
+                       prefHeight="240"
+                       visible="false"
+                       managed="false">
+                <BarChart fx:id="reportBarChart"
+                          prefHeight="240"
+                          legendVisible="true"
+                          animated="true"
+                          style="-fx-background-color: transparent; -fx-padding: 8px;">
+                    <xAxis>
+                        <CategoryAxis fx:id="reportChartXAxis"
+                                      tickLabelFill="#9ca3af"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="reportChartYAxis"
+                                    tickLabelFill="#9ca3af"
+                                    forceZeroInRange="true"/>
+                    </yAxis>
+                    <datasets>
+                        <XYChart.Series fx:id="reportChartSeries1" name="Series 1"/>
+                        <XYChart.Series fx:id="reportChartSeries2" name="Series 2"/>
+                    </datasets>
+                </BarChart>
+            </StackPane>
+
+            <!-- Summary KPIs (shown after generation) -->
+            <HBox fx:id="reportKpiStrip"
+                  spacing="16"
+                  style="-fx-padding: 16px;"
+                  visible="false"
+                  managed="false">
+                <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="4">
+                    <Label fx:id="rKpi1Label" text="—" styleClass="caption-text"/>
+                    <Label fx:id="rKpi1Value" text="—" styleClass="kpi-value"
+                           style="-fx-font-size: 22px;"/>
+                </VBox>
+                <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="4">
+                    <Label fx:id="rKpi2Label" text="—" styleClass="caption-text"/>
+                    <Label fx:id="rKpi2Value" text="—" styleClass="kpi-value"
+                           style="-fx-font-size: 22px;"/>
+                </VBox>
+                <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="4">
+                    <Label fx:id="rKpi3Label" text="—" styleClass="caption-text"/>
+                    <Label fx:id="rKpi3Value" text="—" styleClass="kpi-value"
+                           style="-fx-font-size: 22px;"/>
+                </VBox>
+                <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="4">
+                    <Label fx:id="rKpi4Label" text="—" styleClass="caption-text"/>
+                    <Label fx:id="rKpi4Value" text="—" styleClass="kpi-value"
+                           style="-fx-font-size: 22px;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Data Table -->
+            <TableView fx:id="reportDataTable"
+                       styleClass="table-view"
+                       prefHeight="350">
+                <placeholder>
+                    <Label text="No data. Generate a report to see results here."/>
+                </placeholder>
+                <columns>
+                    <!-- Columns are added dynamically by the controller based on report type -->
+                    <TableColumn fx:id="reportCol1" text="Column 1" prefWidth="160"/>
+                    <TableColumn fx:id="reportCol2" text="Column 2" prefWidth="140"/>
+                    <TableColumn fx:id="reportCol3" text="Column 3" prefWidth="140"/>
+                    <TableColumn fx:id="reportCol4" text="Column 4" prefWidth="140"/>
+                    <TableColumn fx:id="reportCol5" text="Column 5" prefWidth="140"/>
+                </columns>
+            </TableView>
+
+            <!-- Table Footer -->
+            <HBox alignment="CENTER"
+                  spacing="16"
+                  style="-fx-padding: 12px 16px; -fx-border-color: #f3f4f6 transparent transparent transparent; -fx-border-width: 1px 0 0 0;">
+                <Label fx:id="reportTableInfo"
+                       text="—"
+                       styleClass="caption-text"
+                       HBox.hgrow="ALWAYS"/>
+                <Pagination fx:id="reportTablePagination"
+                            pageCount="1" currentPageIndex="0"
+                            maxPageIndicatorCount="5"/>
+            </HBox>
+
+        </VBox>
+
+    </VBox>
+
+</ScrollPane>

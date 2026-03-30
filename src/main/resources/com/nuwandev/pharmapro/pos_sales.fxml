@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    PharmaPro – Point of Sale (POS) / Sales Screen
+    Keyboard shortcuts: Enter (add to cart), F2 (focus search), Esc (clear/cancel)
+    Controller: com.nuwandev.pharmapro.ui.POSController
+-->
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane
+        xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/17"
+        fx:controller="com.nuwandev.pharmapro.ui.POSController"
+        fx:id="posRoot"
+        style="-fx-background-color: #f0fdf9;"
+        prefWidth="1180" prefHeight="720"
+        minWidth="900" minHeight="600">
+
+    <!-- ══ TOP: POS Topbar ═══════════════════════════════════ -->
+    <top>
+        <HBox fx:id="posTopBar"
+              alignment="CENTER_LEFT"
+              spacing="16"
+              style="-fx-background-color: white;
+                     -fx-padding: 10px 24px;
+                     -fx-border-color: transparent transparent #e5e7eb transparent;
+                     -fx-border-width: 0 0 1px 0;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 6, 0, 0, 2);">
+
+            <Label text="🛒  New Sale"
+                   styleClass="title-small"
+                   HBox.hgrow="ALWAYS"/>
+
+            <!-- Sale Number -->
+            <VBox alignment="CENTER_LEFT" spacing="1">
+                <Label text="SALE #" styleClass="caption-text"/>
+                <Label fx:id="saleNumberLabel"
+                       text="SL-000001"
+                       style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #0d9488;"/>
+            </VBox>
+
+            <Separator orientation="VERTICAL" prefHeight="30" opacity="0.3"/>
+
+            <!-- Cashier -->
+            <VBox alignment="CENTER_LEFT" spacing="1">
+                <Label text="CASHIER" styleClass="caption-text"/>
+                <Label fx:id="cashierNameLabel"
+                       text="Admin User"
+                       styleClass="body-text"
+                       style="-fx-font-weight: 600;"/>
+            </VBox>
+
+            <Separator orientation="VERTICAL" prefHeight="30" opacity="0.3"/>
+
+            <!-- Date/Time -->
+            <VBox alignment="CENTER_LEFT" spacing="1">
+                <Label text="DATE &amp; TIME" styleClass="caption-text"/>
+                <Label fx:id="posDateTimeLabel"
+                       text="—"
+                       styleClass="body-text"/>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Keyboard Shortcut Hints -->
+            <HBox spacing="6" alignment="CENTER">
+                <Label text="F2" styleClass="kbd-hint"/>
+                <Label text="Focus Search" styleClass="caption-text"/>
+                <Label text="Enter" styleClass="kbd-hint"/>
+                <Label text="Add Item" styleClass="caption-text"/>
+                <Label text="Esc" styleClass="kbd-hint"/>
+                <Label text="Clear" styleClass="caption-text"/>
+            </HBox>
+
+            <!-- Void / New Sale Button -->
+            <Button fx:id="voidSaleBtn"
+                    text="🗑  Void Sale"
+                    styleClass="btn-danger, btn-small"
+                    onAction="#voidSale"/>
+
+        </HBox>
+    </top>
+
+    <!-- ══ CENTER: Product Search + Cart ═════════════════════ -->
+    <center>
+        <VBox spacing="0"
+              style="-fx-padding: 20px 16px 20px 20px;">
+
+            <!-- ── Product Search Bar ── -->
+            <VBox spacing="0"
+                  style="-fx-padding: 0 0 16px 0;">
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="productSearchField"
+                                   styleClass="pos-search-field"
+                                   promptText="🔍  Search medicine by name, barcode, or brand  (F2)"
+                                   maxWidth="Infinity"
+                                   onKeyReleased="#handleSearchKeyRelease"/>
+                        <!-- Spinner shown during search -->
+                        <ProgressIndicator fx:id="searchSpinner"
+                                           prefWidth="22" prefHeight="22"
+                                           visible="false"
+                                           managed="false"
+                                           style="-fx-padding: 0 12px 0 0; -fx-progress-color: #0d9488;"
+                                           StackPane.alignment="CENTER_RIGHT"
+                                           mouseTransparent="true"/>
+                    </StackPane>
+
+                    <!-- Quick Qty Spinner -->
+                    <VBox spacing="2" alignment="CENTER_LEFT">
+                        <Label text="QTY" styleClass="caption-text"/>
+                        <Spinner fx:id="quickQtySpinner"
+                                 styleClass="spinner"
+                                 prefWidth="80" prefHeight="50"
+                                 editable="true"/>
+                    </VBox>
+
+                    <Button fx:id="addToCartBtn"
+                            text="＋  Add to Cart"
+                            styleClass="btn-primary"
+                            prefHeight="50"
+                            defaultButton="false"
+                            onAction="#addToCart"/>
+                </HBox>
+
+                <!-- Search Dropdown Results -->
+                <StackPane>
+                    <ListView fx:id="searchResultsList"
+                              styleClass="card"
+                              prefHeight="180"
+                              visible="false"
+                              managed="false"
+                              style="-fx-background-color: white;
+                                     -fx-border-radius: 8px;
+                                     -fx-background-radius: 8px;
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 14, 0, 0, 4);
+                                     -fx-padding: 4px 0;
+                                     -fx-translate-y: 4px;"
+                              onMouseClicked="#selectSearchResult"/>
+                </StackPane>
+            </VBox>
+
+            <!-- ── Cart Table ── -->
+            <VBox styleClass="card"
+                  spacing="0"
+                  VBox.vgrow="ALWAYS">
+
+                <HBox styleClass="card-header" alignment="CENTER_LEFT" spacing="0">
+                    <Label text="Cart Items"
+                           styleClass="card-title"
+                           HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="cartItemCountLabel"
+                           text="0 items"
+                           styleClass="caption-text"/>
+                </HBox>
+
+                <TableView fx:id="cartTable"
+                           styleClass="table-view"
+                           VBox.vgrow="ALWAYS"
+                           editable="true">
+                    <placeholder>
+                        <Label text="Cart is empty. Search for a medicine above."/>
+                    </placeholder>
+                    <columns>
+
+                        <!-- # -->
+                        <TableColumn fx:id="cartIndexCol"
+                                     text="#"
+                                     maxWidth="40"
+                                     minWidth="40"
+                                     resizable="false"
+                                     sortable="false"/>
+
+                        <TableColumn fx:id="cartMedicineCol"
+                                     text="MEDICINE"
+                                     prefWidth="220"
+                                     minWidth="160"/>
+
+                        <TableColumn fx:id="cartBatchCol"
+                                     text="BATCH"
+                                     prefWidth="110"
+                                     minWidth="80"/>
+
+                        <TableColumn fx:id="cartExpiryCol"
+                                     text="EXPIRY"
+                                     prefWidth="100"
+                                     minWidth="80"/>
+
+                        <!-- Editable Qty column -->
+                        <TableColumn fx:id="cartQtyCol"
+                                     text="QTY"
+                                     prefWidth="80"
+                                     minWidth="64"
+                                     editable="true"/>
+
+                        <TableColumn fx:id="cartUnitPriceCol"
+                                     text="UNIT PRICE"
+                                     prefWidth="110"
+                                     minWidth="85"/>
+
+                        <!-- Editable discount per line -->
+                        <TableColumn fx:id="cartDiscountCol"
+                                     text="DISC %"
+                                     prefWidth="80"
+                                     minWidth="64"
+                                     editable="true"/>
+
+                        <TableColumn fx:id="cartLineTotalCol"
+                                     text="LINE TOTAL"
+                                     prefWidth="110"
+                                     minWidth="90"/>
+
+                        <!-- Remove action -->
+                        <TableColumn fx:id="cartRemoveCol"
+                                     text=""
+                                     maxWidth="44"
+                                     minWidth="44"
+                                     resizable="false"
+                                     sortable="false"/>
+
+                    </columns>
+                </TableView>
+
+                <!-- Cart Footer -->
+                <HBox fx:id="cartFooter"
+                      alignment="CENTER_LEFT"
+                      spacing="16"
+                      style="-fx-padding: 10px 16px; -fx-border-color: #f3f4f6 transparent transparent transparent; -fx-border-width: 1px 0 0 0;">
+                    <Button fx:id="clearCartBtn"
+                            text="🗑  Clear Cart"
+                            styleClass="btn-danger, btn-small"
+                            onAction="#clearCart"/>
+                    <Button fx:id="holdSaleBtn"
+                            text="⏸  Hold Sale"
+                            styleClass="btn-secondary, btn-small"
+                            onAction="#holdSale"/>
+                    <Button fx:id="recallSaleBtn"
+                            text="⏮  Recall Held"
+                            styleClass="btn-secondary, btn-small"
+                            onAction="#recallHeldSale"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="cartSubtotalQuickLabel"
+                           text="Subtotal: $0.00"
+                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #374151;"/>
+                </HBox>
+
+            </VBox>
+
+        </VBox>
+    </center>
+
+    <!-- ══ RIGHT: Summary + Payment Card ═════════════════════ -->
+    <right>
+        <VBox fx:id="paymentPanel"
+              styleClass="pos-summary-card"
+              spacing="0"
+              style="-fx-padding: 20px 20px; -fx-margin: 20px 20px 20px 0;">
+
+            <!-- Panel Title -->
+            <Label text="Order Summary"
+                   styleClass="title-small"
+                   style="-fx-padding: 0 0 16px 0;"/>
+
+            <!-- Totals Breakdown -->
+            <VBox spacing="0">
+
+                <HBox styleClass="pos-total-row" alignment="CENTER_LEFT" spacing="0">
+                    <Label text="Subtotal" styleClass="body-text" HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="subtotalLabel"
+                           text="$0.00"
+                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #374151;"/>
+                </HBox>
+
+                <HBox styleClass="pos-total-row" alignment="CENTER_LEFT" spacing="0">
+                    <Label text="Tax" styleClass="body-text" HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="taxLabel"
+                           text="$0.00"
+                           styleClass="body-text"/>
+                </HBox>
+
+                <HBox styleClass="pos-total-row" alignment="CENTER_LEFT" spacing="0">
+                    <Label text="Discount" styleClass="body-text" HBox.hgrow="ALWAYS"/>
+                    <HBox spacing="8" alignment="CENTER_RIGHT">
+                        <TextField fx:id="discountPercentField"
+                                   styleClass="form-field"
+                                   promptText="0"
+                                   prefWidth="54"
+                                   prefHeight="32"
+                                   style="-fx-font-size: 13px;"
+                                   maxWidth="54"/>
+                        <Label text="%" style="-fx-text-fill: #6b7280; -fx-font-size: 13px;"/>
+                        <Label fx:id="discountValueLabel"
+                               text="- $0.00"
+                               style="-fx-text-fill: #10b981; -fx-font-size: 14px; -fx-font-weight: 600;"/>
+                    </HBox>
+                </HBox>
+
+            </VBox>
+
+            <!-- Grand Total -->
+            <VBox style="-fx-background-color: #f0fdf9; -fx-background-radius: 10px;
+                         -fx-padding: 16px; -fx-margin: 12px 0; -fx-border-radius: 10px;
+                         -fx-border-color: #99f6e4; -fx-border-width: 1px;">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="GRAND TOTAL"
+                           style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #0d9488;"
+                           HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <Label fx:id="grandTotalLabel"
+                       text="$0.00"
+                       styleClass="pos-grand-total-value"/>
+            </VBox>
+
+            <Region prefHeight="8"/>
+
+            <!-- Customer (optional) -->
+            <VBox spacing="4" style="-fx-padding: 0 0 12px 0;">
+                <Label text="Customer (optional)" styleClass="form-label"/>
+                <HBox spacing="8">
+                    <TextField fx:id="customerSearchField"
+                               styleClass="form-field"
+                               promptText="Search customer…"
+                               HBox.hgrow="ALWAYS"
+                               prefHeight="38"/>
+                    <Button fx:id="walkInBtn"
+                            text="Walk-in"
+                            styleClass="btn-secondary, btn-small"
+                            onAction="#setWalkInCustomer"/>
+                </HBox>
+            </VBox>
+
+            <!-- Payment Method -->
+            <VBox spacing="4" style="-fx-padding: 0 0 12px 0;">
+                <Label text="Payment Method" styleClass="form-label"/>
+                <ComboBox fx:id="paymentMethodCombo"
+                          styleClass="combo-box"
+                          maxWidth="Infinity"
+                          prefHeight="42"
+                          value="Cash"/>
+            </VBox>
+
+            <!-- Cash Payment Section -->
+            <VBox fx:id="cashPaymentSection" spacing="10">
+
+                <VBox spacing="4">
+                    <Label text="Cash Tendered" styleClass="form-label"/>
+                    <TextField fx:id="cashTenderedField"
+                               styleClass="form-field"
+                               promptText="0.00"
+                               style="-fx-font-size: 18px; -fx-font-weight: bold;"
+                               prefHeight="48"
+                               maxWidth="Infinity"/>
+                </VBox>
+
+                <!-- Quick Cash Buttons -->
+                <HBox spacing="6">
+                    <Button fx:id="cash10Btn" text="$10" styleClass="btn-secondary, btn-small" HBox.hgrow="ALWAYS"
+                            onAction="#quickCash"/>
+                    <Button fx:id="cash20Btn" text="$20" styleClass="btn-secondary, btn-small" HBox.hgrow="ALWAYS"
+                            onAction="#quickCash"/>
+                    <Button fx:id="cash50Btn" text="$50" styleClass="btn-secondary, btn-small" HBox.hgrow="ALWAYS"
+                            onAction="#quickCash"/>
+                    <Button fx:id="cashExactBtn" text="Exact" styleClass="btn-secondary, btn-small" HBox.hgrow="ALWAYS"
+                            onAction="#quickCash"/>
+                </HBox>
+
+                <!-- Change -->
+                <HBox style="-fx-background-color: #f3f4f6; -fx-background-radius: 8px; -fx-padding: 12px 16px;"
+                      alignment="CENTER_LEFT">
+                    <Label text="Change" styleClass="body-text" HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="changeLabel"
+                           text="$0.00"
+                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0d9488;"/>
+                </HBox>
+
+            </VBox>
+
+            <!-- Card / Other Payment section (shown dynamically) -->
+            <VBox fx:id="cardPaymentSection" spacing="10" visible="false" managed="false">
+                <VBox spacing="4">
+                    <Label text="Reference / Transaction ID" styleClass="form-label"/>
+                    <TextField fx:id="cardReferenceField"
+                               styleClass="form-field"
+                               promptText="Last 4 digits or ref ID"
+                               maxWidth="Infinity"/>
+                </VBox>
+            </VBox>
+
+            <!-- Notes -->
+            <VBox spacing="4" style="-fx-padding: 10px 0 0 0;">
+                <Label text="Notes" styleClass="form-label"/>
+                <TextArea fx:id="saleNotesField"
+                          styleClass="form-textarea"
+                          promptText="Optional notes…"
+                          wrapText="true"
+                          prefRowCount="2"
+                          style="-fx-pref-height: 56px;"/>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Complete Sale Button -->
+            <Button fx:id="completeSaleBtn"
+                    text="✔  Complete Sale"
+                    styleClass="pos-complete-btn"
+                    maxWidth="Infinity"
+                    onAction="#completeSale"/>
+
+            <!-- Bottom hints -->
+            <HBox alignment="CENTER" spacing="6" style="-fx-padding: 10px 0 0 0;">
+                <Label text="Enter" styleClass="kbd-hint"/>
+                <Label text="to complete" styleClass="caption-text"/>
+                <Label text="•" styleClass="caption-text"/>
+                <Label text="Esc" styleClass="kbd-hint"/>
+                <Label text="to cancel" styleClass="caption-text"/>
+            </HBox>
+
+        </VBox>
+    </right>
+
+    <!-- ══ RECEIPT PRINT OVERLAY ════════════════════════════════ -->
+    <bottom>
+        <!-- Injected programmatically after sale completion -->
+        <StackPane fx:id="receiptOverlay"
+                   styleClass="modal-overlay"
+                   visible="false"
+                   managed="false">
+            <VBox fx:id="receiptCard"
+                  styleClass="card"
+                  spacing="12"
+                  maxWidth="360"
+                  alignment="CENTER">
+                <Label text="✅  Sale Completed!"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0d9488;"/>
+                <Label fx:id="receiptSaleNumber"
+                       text="Receipt #SL-000001"
+                       styleClass="body-text"/>
+                <Label fx:id="receiptTotal"
+                       text="Total: $0.00"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+                <HBox spacing="10" alignment="CENTER">
+                    <Button fx:id="printReceiptBtn"
+                            text="🖨  Print Receipt"
+                            styleClass="btn-primary"
+                            onAction="#printReceipt"/>
+                    <Button fx:id="newSaleBtn"
+                            text="＋  New Sale"
+                            styleClass="btn-secondary"
+                            onAction="#startNewSale"/>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </bottom>
+
+</BorderPane>

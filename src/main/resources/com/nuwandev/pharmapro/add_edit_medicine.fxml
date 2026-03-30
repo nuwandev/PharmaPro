@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    PharmaPro – Add / Edit Medicine Form
+    Used as both a standalone screen and inside a modal dialog.
+    Controller: com.nuwandev.pharmapro.ui.MedicineFormController
+-->
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox
+        xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/17"
+        fx:controller="com.nuwandev.pharmapro.ui.MedicineFormController"
+        fx:id="medicineFormRoot"
+        spacing="0"
+        style="-fx-background-color: white; -fx-background-radius: 14px;"
+        stylesheets="@css/pharmapro.css"
+        prefWidth="600" prefHeight="600"
+        minWidth="400" minHeight="400">
+
+    <!-- ── Header ──────────────────────────────────────────── -->
+    <HBox fx:id="formHeader"
+          styleClass="modal-header"
+          alignment="CENTER_LEFT"
+          spacing="12">
+        <VBox HBox.hgrow="ALWAYS" spacing="3">
+            <Label fx:id="formTitleLabel"
+                   text="Add New Medicine"
+                   styleClass="title-small"/>
+            <Label fx:id="formSubtitleLabel"
+                   text="Fill in the details below. Fields marked * are required."
+                   styleClass="caption-text"/>
+        </VBox>
+        <Button fx:id="closeFormBtn"
+                text="✕"
+                styleClass="drawer-close-btn"
+                onAction="#closeForm"/>
+    </HBox>
+
+    <!-- ── Form Body (ScrollPane for small screens) ─────────── -->
+    <ScrollPane fx:id="formScrollPane"
+                fitToWidth="true"
+                hbarPolicy="NEVER"
+                vbarPolicy="AS_NEEDED"
+                VBox.vgrow="ALWAYS"
+                style="-fx-background-color: transparent; -fx-border-color: transparent;">
+
+        <VBox spacing="24" style="-fx-padding: 24px;">
+
+            <!-- ═══ Section: Basic Information ═══ -->
+            <VBox spacing="16">
+                <Label text="Basic Information"
+                       styleClass="title-small"
+                       style="-fx-text-fill: #0d9488;"/>
+
+                <GridPane fx:id="basicInfoGrid"
+                          hgap="20" vgap="16"
+                          maxWidth="Infinity">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                    </columnConstraints>
+
+                    <!-- Medicine Name -->
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <HBox spacing="2">
+                            <Label text="Medicine Name" styleClass="form-label"/>
+                            <Label text=" *" style="-fx-text-fill: #ef4444; -fx-font-size: 13px;"/>
+                        </HBox>
+                        <TextField fx:id="medicineNameField"
+                                   styleClass="form-field"
+                                   promptText="e.g. Paracetamol 500mg"
+                                   maxWidth="Infinity"/>
+                        <Label fx:id="medicineNameError"
+                               styleClass="validation-error"
+                               text=""
+                               visible="false"
+                               managed="false"/>
+                    </VBox>
+
+                    <!-- Brand -->
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <HBox spacing="2">
+                            <Label text="Brand / Manufacturer" styleClass="form-label"/>
+                            <Label text=" *" style="-fx-text-fill: #ef4444; -fx-font-size: 13px;"/>
+                        </HBox>
+                        <TextField fx:id="brandField"
+                                   styleClass="form-field"
+                                   promptText="e.g. GlaxoSmithKline"
+                                   maxWidth="Infinity"/>
+                        <Label fx:id="brandError"
+                               styleClass="validation-error"
+                               text=""
+                               visible="false"
+                               managed="false"/>
+                    </VBox>
+
+                    <!-- Category -->
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <HBox spacing="2">
+                            <Label text="Category" styleClass="form-label"/>
+                            <Label text=" *" style="-fx-text-fill: #ef4444; -fx-font-size: 13px;"/>
+                        </HBox>
+                        <ComboBox fx:id="categoryCombo"
+                                  styleClass="combo-box"
+                                  promptText="Select category"
+                                  maxWidth="Infinity"/>
+                        <Label fx:id="categoryError"
+                               styleClass="validation-error"
+                               text=""
+                               visible="false"
+                               managed="false"/>
+                    </VBox>
+
+                    <!-- Unit -->
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <HBox spacing="2">
+                            <Label text="Dispensing Unit" styleClass="form-label"/>
+                            <Label text=" *" style="-fx-text-fill: #ef4444; -fx-font-size: 13px;"/>
+                        </HBox>
+                        <ComboBox fx:id="unitCombo"
+                                  styleClass="combo-box"
+                                  promptText="e.g. Tablet, Capsule, Bottle"
+                                  maxWidth="Infinity"
+                                  editable="true"/>
+                        <Label fx:id="unitError"
+                               styleClass="validation-error"
+                               text=""
+                               visible="false"
+                               managed="false"/>
+                    </VBox>
+
+                    <!-- Barcode -->
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <Label text="Barcode / SKU" styleClass="form-label"/>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <TextField fx:id="barcodeField"
+                                       styleClass="form-field"
+                                       promptText="Scan or enter barcode"
+                                       HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="scanBarcodeBtn"
+                                    text="📷"
+                                    styleClass="btn-secondary, btn-small"
+                                    onAction="#scanBarcode"
+                                    prefHeight="42" prefWidth="42">
+                                <tooltip>
+                                    <Tooltip text="Scan barcode"/>
+                                </tooltip>
+                            </Button>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Active Status -->
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label text="Status" styleClass="form-label"/>
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <RadioButton fx:id="statusActiveRadio"
+                                         text="Active"
+                                         selected="true"
+                                         style="-fx-font-size: 14px;"/>
+                            <RadioButton fx:id="statusInactiveRadio"
+                                         text="Inactive"
+                                         style="-fx-font-size: 14px;"/>
+                        </HBox>
+                        <!-- Controller binds both to a ToggleGroup -->
+                    </VBox>
+
+                </GridPane>
+
+                <!-- Description (full width) -->
+                <VBox spacing="4">
+                    <Label text="Description / Notes" styleClass="form-label"/>
+                    <TextArea fx:id="descriptionField"
+                              styleClass="form-textarea"
+                              promptText="Optional description, warnings, or usage instructions…"
+                              wrapText="true"
+                              prefRowCount="3"/>
+                </VBox>
+
+            </VBox>
+
+            <!-- Divider -->
+            <Separator/>
+
+            <!-- ═══ Section: Pricing & Inventory Settings ═══ -->
+            <VBox spacing="16">
+                <Label text="Pricing &amp; Inventory Defaults"
+                       styleClass="title-small"
+                       style="-fx-text-fill: #0d9488;"/>
+
+                <GridPane hgap="20" vgap="16" maxWidth="Infinity">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33"/>
+                    </columnConstraints>
+
+                    <!-- Default Purchase Price -->
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Default Purchase Price" styleClass="form-label"/>
+                        <TextField fx:id="defaultPurchasePriceField"
+                                   styleClass="form-field"
+                                   promptText="0.00"
+                                   maxWidth="Infinity"/>
+                    </VBox>
+
+                    <!-- Default Sell Price -->
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <HBox spacing="2">
+                            <Label text="Default Sell Price" styleClass="form-label"/>
+                            <Label text=" *" style="-fx-text-fill: #ef4444; -fx-font-size: 13px;"/>
+                        </HBox>
+                        <TextField fx:id="defaultSellPriceField"
+                                   styleClass="form-field"
+                                   promptText="0.00"
+                                   maxWidth="Infinity"/>
+                        <Label fx:id="sellPriceError"
+                               styleClass="validation-error"
+                               text=""
+                               visible="false"
+                               managed="false"/>
+                    </VBox>
+
+                    <!-- Reorder Level -->
+                    <VBox spacing="4" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <Label text="Reorder Level" styleClass="form-label"/>
+                        <Spinner fx:id="reorderLevelSpinner"
+                                 styleClass="spinner"
+                                 prefHeight="42"
+                                 maxWidth="Infinity"
+                                 editable="true"/>
+                    </VBox>
+
+                    <!-- Tax Rate -->
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="Tax Rate (%)" styleClass="form-label"/>
+                        <TextField fx:id="taxRateField"
+                                   styleClass="form-field"
+                                   promptText="0"
+                                   maxWidth="Infinity"/>
+                    </VBox>
+
+                    <!-- Requires Prescription -->
+                    <VBox spacing="4"
+                          GridPane.columnIndex="1" GridPane.rowIndex="1"
+                          alignment="BOTTOM_LEFT">
+                        <CheckBox fx:id="requiresPrescriptionCheck"
+                                  text="Requires Prescription"
+                                  style="-fx-font-size: 14px; -fx-text-fill: #374151;"/>
+                    </VBox>
+
+                    <!-- Allow Fractional Qty -->
+                    <VBox spacing="4"
+                          GridPane.columnIndex="2" GridPane.rowIndex="1"
+                          alignment="BOTTOM_LEFT">
+                        <CheckBox fx:id="fractionalQtyCheck"
+                                  text="Allow Fractional Qty"
+                                  style="-fx-font-size: 14px; -fx-text-fill: #374151;"/>
+                    </VBox>
+
+                </GridPane>
+            </VBox>
+
+            <!-- Divider -->
+            <Separator/>
+
+            <!-- ═══ Section: Initial Batch (only on Add mode) ═══ -->
+            <VBox fx:id="initialBatchSection" spacing="16">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Opening Batch (Optional)"
+                           styleClass="title-small"
+                           style="-fx-text-fill: #0d9488;"
+                           HBox.hgrow="ALWAYS"/>
+                    <CheckBox fx:id="addInitialBatchCheck"
+                              text="Add opening batch now"
+                              style="-fx-font-size: 13px;"/>
+                </HBox>
+
+                <GridPane fx:id="initialBatchGrid"
+                          hgap="20" vgap="16"
+                          maxWidth="Infinity"
+                          visible="false"
+                          managed="false">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="25"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="25"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="25"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="25"/>
+                    </columnConstraints>
+
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Batch Number" styleClass="form-label"/>
+                        <TextField fx:id="initBatchNumberField"
+                                   styleClass="form-field"
+                                   promptText="e.g. BT-001"
+                                   maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Quantity" styleClass="form-label"/>
+                        <TextField fx:id="initBatchQtyField"
+                                   styleClass="form-field"
+                                   promptText="0"
+                                   maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox spacing="4" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <Label text="Expiry Date" styleClass="form-label"/>
+                        <DatePicker fx:id="initBatchExpiryPicker"
+                                    styleClass="date-picker"
+                                    maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox spacing="4" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                        <Label text="Purchase Price" styleClass="form-label"/>
+                        <TextField fx:id="initBatchPurchasePriceField"
+                                   styleClass="form-field"
+                                   promptText="0.00"
+                                   maxWidth="Infinity"/>
+                    </VBox>
+
+                </GridPane>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+    <!-- ── Form Footer: Action Buttons ──────────────────────── -->
+    <HBox fx:id="formFooter"
+          styleClass="modal-footer"
+          alignment="CENTER_RIGHT"
+          spacing="12">
+        <Label fx:id="formGlobalError"
+               styleClass="validation-error"
+               text=""
+               visible="false"
+               managed="false"
+               HBox.hgrow="ALWAYS"/>
+        <Button fx:id="cancelBtn"
+                text="Cancel"
+                styleClass="btn-secondary"
+                onAction="#cancelForm"
+                cancelButton="true"/>
+        <Button fx:id="saveAndAddAnotherBtn"
+                text="Save &amp; Add Another"
+                styleClass="btn-secondary"
+                onAction="#saveAndAddAnother"/>
+        <Button fx:id="saveMedicineBtn"
+                text="💾  Save Medicine"
+                styleClass="btn-primary"
+                defaultButton="true"
+                onAction="#saveMedicine"/>
+    </HBox>
+
+</VBox>

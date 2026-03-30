@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    PharmaPro – Batch Management Screen
+    Can be loaded as a standalone screen OR embedded inside the medicine drawer.
+    Controller: com.nuwandev.pharmapro.ui.BatchManagementController
+-->
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox
+        xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/17"
+        fx:controller="com.nuwandev.pharmapro.ui.BatchManagementController"
+        fx:id="batchManagementRoot"
+        spacing="0"
+        style="-fx-background-color: #f5f5f5;"
+        prefWidth="1100" prefHeight="700"
+        minWidth="800" minHeight="500">
+
+    <!-- ── Page Header (standalone mode) ───────────────────── -->
+    <VBox fx:id="standaloneHeader"
+          spacing="4"
+          style="-fx-padding: 0 0 20px 0;">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <VBox HBox.hgrow="ALWAYS">
+                <Label text="Batch Management"
+                       styleClass="title-medium"/>
+                <Label text="Track and manage all medicine batches, expiry, and stock levels."
+                       styleClass="caption-text"/>
+            </VBox>
+            <Button fx:id="addBatchStandaloneBtn"
+                    text="＋  Add Batch"
+                    styleClass="btn-primary"
+                    onAction="#openAddBatchModal"/>
+        </HBox>
+    </VBox>
+
+    <!-- ── Filter / Search Toolbar ─────────────────────────── -->
+    <HBox fx:id="batchToolbar"
+          spacing="12"
+          alignment="CENTER_LEFT"
+          style="-fx-padding: 0 0 16px 0;">
+
+        <!-- Medicine filter -->
+        <ComboBox fx:id="medicineSelectorCombo"
+                  styleClass="combo-box"
+                  promptText="Filter by medicine"
+                  prefWidth="220"
+                  prefHeight="42"/>
+
+        <!-- Status filter -->
+        <ComboBox fx:id="batchStatusFilterCombo"
+                  styleClass="combo-box"
+                  promptText="All Statuses"
+                  prefWidth="150"
+                  prefHeight="42"/>
+
+        <!-- Expiry range filter -->
+        <ComboBox fx:id="expiryRangeCombo"
+                  styleClass="combo-box"
+                  promptText="Expiry Range"
+                  prefWidth="150"
+                  prefHeight="42"/>
+
+        <!-- Search batch number -->
+        <StackPane alignment="CENTER_LEFT">
+            <TextField fx:id="batchSearchField"
+                       styleClass="search-field"
+                       promptText="Search batch number…"
+                       prefWidth="220"/>
+            <Label text="🔍"
+                   style="-fx-padding: 0 0 0 10px; -fx-font-size: 13px; -fx-text-fill: #9ca3af;"
+                   mouseTransparent="true"/>
+        </StackPane>
+
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="batchResultCount"
+               text="0 batches"
+               styleClass="caption-text"/>
+    </HBox>
+
+    <!-- ── KPI Summary Strip ────────────────────────────────── -->
+    <HBox fx:id="batchKpiStrip"
+          spacing="12"
+          style="-fx-padding: 0 0 16px 0;">
+
+        <HBox styleClass="kpi-card, kpi-card-teal"
+              spacing="12" alignment="CENTER_LEFT"
+              HBox.hgrow="ALWAYS">
+            <Label text="📦" style="-fx-font-size: 20px;"/>
+            <VBox spacing="2">
+                <Label fx:id="totalBatchesValue" text="0"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #0d9488;"/>
+                <Label text="Total Batches" styleClass="kpi-label"/>
+            </VBox>
+        </HBox>
+
+        <HBox styleClass="kpi-card, kpi-card-yellow"
+              spacing="12" alignment="CENTER_LEFT"
+              HBox.hgrow="ALWAYS">
+            <Label text="⚠" style="-fx-font-size: 20px; -fx-text-fill: #f59e0b;"/>
+            <VBox spacing="2">
+                <Label fx:id="expiringSoonBatchValue" text="0"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+                <Label text="Expiring ≤ 30d" styleClass="kpi-label"/>
+            </VBox>
+        </HBox>
+
+        <HBox styleClass="kpi-card, kpi-card-red"
+              spacing="12" alignment="CENTER_LEFT"
+              HBox.hgrow="ALWAYS">
+            <Label text="❌" style="-fx-font-size: 20px;"/>
+            <VBox spacing="2">
+                <Label fx:id="expiredBatchValue" text="0"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #ef4444;"/>
+                <Label text="Expired Batches" styleClass="kpi-label"/>
+            </VBox>
+        </HBox>
+
+        <HBox styleClass="kpi-card, kpi-card-blue"
+              spacing="12" alignment="CENTER_LEFT"
+              HBox.hgrow="ALWAYS">
+            <Label text="✅" style="-fx-font-size: 20px;"/>
+            <VBox spacing="2">
+                <Label fx:id="activeBatchValue" text="0"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #3b82f6;"/>
+                <Label text="Active Batches" styleClass="kpi-label"/>
+            </VBox>
+        </HBox>
+    </HBox>
+
+    <!-- ── Batch Table Card ─────────────────────────────────── -->
+    <VBox styleClass="card" spacing="0" VBox.vgrow="ALWAYS">
+
+        <HBox styleClass="card-header" alignment="CENTER_LEFT" spacing="0">
+            <Label text="All Batches"
+                   styleClass="card-title"
+                   HBox.hgrow="ALWAYS"/>
+            <Button fx:id="exportBatchBtn"
+                    text="⬇ Export"
+                    styleClass="btn-secondary, btn-small"
+                    onAction="#exportBatches"/>
+        </HBox>
+
+        <TableView fx:id="batchTable"
+                   styleClass="table-view"
+                   VBox.vgrow="ALWAYS"
+                   prefHeight="450">
+            <placeholder>
+                <Label text="No batches found."/>
+            </placeholder>
+            <columns>
+
+                <TableColumn fx:id="batchMedicineNameCol"
+                             text="MEDICINE NAME"
+                             prefWidth="180"
+                             minWidth="130"/>
+
+                <TableColumn fx:id="batchNumberTableCol"
+                             text="BATCH NUMBER"
+                             prefWidth="130"
+                             minWidth="100"/>
+
+                <TableColumn fx:id="batchQtyTableCol"
+                             text="QTY"
+                             prefWidth="70"
+                             minWidth="55"/>
+
+                <TableColumn fx:id="batchPurchasePriceCol"
+                             text="PURCHASE PRICE"
+                             prefWidth="130"
+                             minWidth="100"/>
+
+                <TableColumn fx:id="batchSellPriceCol"
+                             text="SELL PRICE"
+                             prefWidth="110"
+                             minWidth="85"/>
+
+                <TableColumn fx:id="batchExpiryDateCol"
+                             text="EXPIRY DATE"
+                             prefWidth="120"
+                             minWidth="95"/>
+
+                <TableColumn fx:id="batchDaysLeftTableCol"
+                             text="DAYS LEFT"
+                             prefWidth="100"
+                             minWidth="80"/>
+
+                <TableColumn fx:id="batchStatusTableCol"
+                             text="STATUS"
+                             prefWidth="110"
+                             minWidth="85"/>
+
+                <TableColumn fx:id="batchActionsCol"
+                             text="ACTIONS"
+                             prefWidth="120"
+                             minWidth="100"
+                             sortable="false"
+                             resizable="false"/>
+            </columns>
+        </TableView>
+
+        <!-- Pagination Footer -->
+        <HBox alignment="CENTER"
+              spacing="16"
+              style="-fx-padding: 12px 16px; -fx-border-color: #f3f4f6 transparent transparent transparent; -fx-border-width: 1px 0 0 0;">
+            <Label fx:id="batchPaginationInfo"
+                   text="Page 1 of 1"
+                   styleClass="caption-text"
+                   HBox.hgrow="ALWAYS"/>
+            <Pagination fx:id="batchPagination"
+                        pageCount="1"
+                        currentPageIndex="0"
+                        maxPageIndicatorCount="5"/>
+        </HBox>
+
+    </VBox>
+
+    <!-- ══ ADD BATCH MODAL OVERLAY ══════════════════════════════ -->
+    <StackPane fx:id="addBatchModalOverlay"
+               styleClass="modal-overlay"
+               visible="false"
+               managed="false"
+               VBox.vgrow="ALWAYS">
+
+        <VBox fx:id="addBatchDialog"
+              styleClass="modal-dialog"
+              spacing="0"
+              maxWidth="520">
+
+            <!-- Modal Header -->
+            <HBox styleClass="modal-header" alignment="CENTER_LEFT" spacing="0">
+                <Label fx:id="batchModalTitle"
+                       text="Add New Batch"
+                       styleClass="title-small"
+                       HBox.hgrow="ALWAYS"/>
+                <Button fx:id="closeBatchModalBtn"
+                        text="✕"
+                        styleClass="drawer-close-btn"
+                        onAction="#closeAddBatchModal"/>
+            </HBox>
+
+            <!-- Modal Body -->
+            <VBox styleClass="modal-body" spacing="16">
+
+                <!-- Medicine Selector (standalone only) -->
+                <VBox spacing="4" fx:id="batchMedicineSelectRow">
+                    <HBox spacing="2">
+                        <Label text="Medicine" styleClass="form-label"/>
+                        <Label text=" *" style="-fx-text-fill: #ef4444; -fx-font-size: 13px;"/>
+                    </HBox>
+                    <ComboBox fx:id="batchMedicineCombo"
+                              styleClass="combo-box"
+                              promptText="Select medicine"
+                              maxWidth="Infinity"/>
+                    <Label fx:id="batchMedicineError"
+                           styleClass="validation-error"
+                           text=""
+                           visible="false" managed="false"/>
+                </VBox>
+
+                <GridPane hgap="16" vgap="14" maxWidth="Infinity">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                    </columnConstraints>
+
+                    <!-- Batch Number -->
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <HBox spacing="2">
+                            <Label text="Batch Number" styleClass="form-label"/>
+                            <Label text=" *" style="-fx-text-fill: #ef4444; -fx-font-size: 13px;"/>
+                        </HBox>
+                        <TextField fx:id="batchNumberInputField"
+                                   styleClass="form-field"
+                                   promptText="e.g. BT-20250101"
+                                   maxWidth="Infinity"/>
+                        <Label fx:id="batchNumberError"
+                               styleClass="validation-error"
+                               text=""
+                               visible="false" managed="false"/>
+                    </VBox>
+
+                    <!-- Quantity -->
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <HBox spacing="2">
+                            <Label text="Quantity" styleClass="form-label"/>
+                            <Label text=" *" style="-fx-text-fill: #ef4444; -fx-font-size: 13px;"/>
+                        </HBox>
+                        <TextField fx:id="batchQtyInputField"
+                                   styleClass="form-field"
+                                   promptText="0"
+                                   maxWidth="Infinity"/>
+                        <Label fx:id="batchQtyError"
+                               styleClass="validation-error"
+                               text=""
+                               visible="false" managed="false"/>
+                    </VBox>
+
+                    <!-- Purchase Price -->
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <HBox spacing="2">
+                            <Label text="Purchase Price" styleClass="form-label"/>
+                            <Label text=" *" style="-fx-text-fill: #ef4444; -fx-font-size: 13px;"/>
+                        </HBox>
+                        <TextField fx:id="purchasePriceInputField"
+                                   styleClass="form-field"
+                                   promptText="0.00"
+                                   maxWidth="Infinity"/>
+                    </VBox>
+
+                    <!-- Sell Price -->
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <HBox spacing="2">
+                            <Label text="Sell Price" styleClass="form-label"/>
+                            <Label text=" *" style="-fx-text-fill: #ef4444; -fx-font-size: 13px;"/>
+                        </HBox>
+                        <TextField fx:id="sellPriceInputField"
+                                   styleClass="form-field"
+                                   promptText="0.00"
+                                   maxWidth="Infinity"/>
+                    </VBox>
+
+                    <!-- Expiry Date -->
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <HBox spacing="2">
+                            <Label text="Expiry Date" styleClass="form-label"/>
+                            <Label text=" *" style="-fx-text-fill: #ef4444; -fx-font-size: 13px;"/>
+                        </HBox>
+                        <DatePicker fx:id="expiryDatePicker"
+                                    styleClass="date-picker"
+                                    maxWidth="Infinity"/>
+                        <Label fx:id="expiryDateError"
+                               styleClass="validation-error"
+                               text=""
+                               visible="false" managed="false"/>
+                    </VBox>
+
+                    <!-- Manufacture Date -->
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label text="Manufacture Date" styleClass="form-label"/>
+                        <DatePicker fx:id="manufactureDatePicker"
+                                    styleClass="date-picker"
+                                    maxWidth="Infinity"/>
+                    </VBox>
+
+                    <!-- Supplier -->
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                        <Label text="Supplier" styleClass="form-label"/>
+                        <ComboBox fx:id="batchSupplierCombo"
+                                  styleClass="combo-box"
+                                  promptText="Select supplier"
+                                  maxWidth="Infinity"/>
+                    </VBox>
+
+                    <!-- Storage Location -->
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <Label text="Storage Location" styleClass="form-label"/>
+                        <TextField fx:id="storageLocationField"
+                                   styleClass="form-field"
+                                   promptText="e.g. Shelf A-3"
+                                   maxWidth="Infinity"/>
+                    </VBox>
+
+                </GridPane>
+
+                <!-- Notes -->
+                <VBox spacing="4">
+                    <Label text="Notes" styleClass="form-label"/>
+                    <TextArea fx:id="batchNotesField"
+                              styleClass="form-textarea"
+                              promptText="Optional notes about this batch…"
+                              wrapText="true"
+                              prefRowCount="2"/>
+                </VBox>
+
+                <!-- Global validation error -->
+                <Label fx:id="batchFormGlobalError"
+                       styleClass="validation-error"
+                       text=""
+                       visible="false"
+                       managed="false"/>
+
+            </VBox>
+
+            <!-- Modal Footer -->
+            <HBox styleClass="modal-footer"
+                  alignment="CENTER_RIGHT"
+                  spacing="12">
+                <Button fx:id="cancelAddBatchBtn"
+                        text="Cancel"
+                        styleClass="btn-secondary"
+                        onAction="#closeAddBatchModal"
+                        cancelButton="true"/>
+                <Button fx:id="saveBatchBtn"
+                        text="💾  Save Batch"
+                        styleClass="btn-primary"
+                        defaultButton="true"
+                        onAction="#saveBatch"/>
+            </HBox>
+
+        </VBox>
+    </StackPane>
+
+</VBox>
