@@ -137,8 +137,7 @@ public class LoginController {
             return;
         }
         try {
-            FXMLLoader loader =
-                    new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/main_layout.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/main_layout.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.getScene().setRoot(root);

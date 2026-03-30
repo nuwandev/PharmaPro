@@ -117,21 +117,28 @@ public class MainLayoutController {
     private void navigateToSettings() {
     }
 
+    private void switchScene(Parent root, String title, boolean maximize) {
+        Stage stage = (Stage) mainRoot.getScene().getWindow();
+        stage.getScene().setRoot(root);
+        stage.setTitle(title);
+        stage.setResizable(maximize);
+        if (maximize) {
+            stage.setMaximized(true);
+        } else {
+            stage.setMaximized(false);
+            stage.sizeToScene();
+            stage.centerOnScreen();
+        }
+    }
+
     @FXML
     private void handleLogout() {
-        // Clear session
         SessionContext.clear();
         SessionStorage.clear();
-        // Redirect to login screen
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/login.fxml"));
             Parent loginRoot = loader.load();
-            Stage stage = (Stage) mainRoot.getScene().getWindow();
-            stage.getScene().setRoot(loginRoot);
-            stage.setTitle("PharmaPro Login");
-            stage.setResizable(false);
-            stage.sizeToScene();
-            stage.centerOnScreen();
+            switchScene(loginRoot, "PharmaPro Login", false);
         } catch (IOException e) {
             e.printStackTrace();
         }
