@@ -4,7 +4,6 @@ import com.nuwandev.pharmapro.factory.ServiceFactory;
 import com.nuwandev.pharmapro.model.User;
 import com.nuwandev.pharmapro.service.AuthService;
 import com.nuwandev.pharmapro.session.SessionContext;
-import com.nuwandev.pharmapro.session.SessionStorage;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -82,19 +81,6 @@ public class LoginController {
         errorBanner.setVisible(false);
         errorBanner.setManaged(false);
 
-        // Attempt auto-login with remember me token
-        String token = SessionStorage.loadToken();
-        if (token != null && !token.isBlank()) {
-            Optional<User> userOpt = authService.findByRememberMeToken(token.trim());
-            if (userOpt.isPresent()) {
-                SessionContext.setUser(userOpt.get());
-                shouldAutoLogin = true;
-            } else {
-                SessionStorage.clear();
-            }
-        }
-
-        // Defer openDashboard() until scene is available
         loginButton
                 .sceneProperty()
                 .addListener(
@@ -132,14 +118,6 @@ public class LoginController {
                     }
                     User user = userOpt.get();
                     SessionContext.setUser(user);
-                    if (rememberMeCheckBox.isSelected()) {
-                        String token = generateToken();
-                        authService.updateRememberMeToken(user.id(), token);
-                        SessionStorage.saveToken(token);
-                    } else {
-                        authService.updateRememberMeToken(user.id(), null);
-                        SessionStorage.clear();
-                    }
                     openDashboard();
                 });
 

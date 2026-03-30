@@ -1,5 +1,6 @@
 package com.nuwandev.pharmapro.service;
 
+import com.nuwandev.pharmapro.enums.UserStatus;
 import com.nuwandev.pharmapro.model.User;
 import com.nuwandev.pharmapro.repository.UserRepository;
 
@@ -21,19 +22,11 @@ public class AuthService {
         if (userOpt.isEmpty()) return Optional.empty();
 
         User user = userOpt.get();
+        if (user.status() != UserStatus.ACTIVE) return Optional.empty();
         if (!PasswordUtil.checkPassword(password, user.passwordHash())) {
             return Optional.empty();
         }
 
         return Optional.of(user);
-    }
-
-    public Optional<User> findByRememberMeToken(String token) {
-        if (token == null || token.isBlank()) return Optional.empty();
-        return userRepository.findByRememberMeToken(token.trim());
-    }
-
-    public void updateRememberMeToken(Long userId, String token) {
-        userRepository.updateRememberMeToken(userId, token);
     }
 }
