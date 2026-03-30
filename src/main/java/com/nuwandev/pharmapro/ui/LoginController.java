@@ -4,6 +4,7 @@ import com.nuwandev.pharmapro.factory.ServiceFactory;
 import com.nuwandev.pharmapro.model.User;
 import com.nuwandev.pharmapro.service.AuthService;
 import com.nuwandev.pharmapro.session.SessionContext;
+import com.nuwandev.pharmapro.session.SessionStorage;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,14 +15,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.Optional;
 import java.util.logging.Logger;
 
 public class LoginController {
-    // Use a single SecureRandom instance for efficiency and security
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private static final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
     private final AuthService authService = ServiceFactory.authService();
 
@@ -69,10 +66,6 @@ public class LoginController {
     private ProgressIndicator loginProgress;
     private boolean shouldAutoLogin = false;
 
-    private static String generateToken() {
-        return new BigInteger(130, SECURE_RANDOM).toString(32);
-    }
-
     @FXML
     private void initialize() {
         // Hide overlays and banners initially
@@ -118,6 +111,11 @@ public class LoginController {
                     }
                     User user = userOpt.get();
                     SessionContext.setUser(user);
+                    if (rememberMeCheckBox.isSelected()) {
+                        SessionStorage.saveToken(user.username());
+                    } else {
+                        SessionStorage.clear();
+                    }
                     openDashboard();
                 });
 
