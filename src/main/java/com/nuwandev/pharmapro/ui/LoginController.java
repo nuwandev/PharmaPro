@@ -25,21 +25,27 @@ public class LoginController {
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private static final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
     private final AuthService authService = ServiceFactory.authService();
+
     @FXML
     @SuppressWarnings("unused")
     private StackPane loginRoot;
+
     @FXML
     @SuppressWarnings("unused")
     private VBox loginCard;
+
     @FXML
     @SuppressWarnings("unused")
     private StackPane logoContainer;
+
     @FXML
     @SuppressWarnings("unused")
     private Label appNameLabel;
+
     @FXML
     @SuppressWarnings("unused")
     private Label appTaglineLabel;
+
     @FXML
     private TextField usernameField;
     @FXML
@@ -62,12 +68,11 @@ public class LoginController {
     private StackPane loadingOverlay;
     @FXML
     private ProgressIndicator loginProgress;
+    private boolean shouldAutoLogin = false;
 
     private static String generateToken() {
         return new BigInteger(130, SECURE_RANDOM).toString(32);
     }
-
-    private boolean shouldAutoLogin = false;
 
     @FXML
     private void initialize() {
@@ -90,12 +95,15 @@ public class LoginController {
         }
 
         // Defer openDashboard() until scene is available
-        loginButton.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null && shouldAutoLogin) {
-                shouldAutoLogin = false;
-                openDashboard();
-            }
-        });
+        loginButton
+                .sceneProperty()
+                .addListener(
+                        (obs, oldScene, newScene) -> {
+                            if (newScene != null && shouldAutoLogin) {
+                                shouldAutoLogin = false;
+                                openDashboard();
+                            }
+                        });
     }
 
     @FXML
@@ -106,37 +114,40 @@ public class LoginController {
         final String username = usernameField.getText();
         final String password = passwordField.getText();
 
-        Task<Optional<User>> task = new Task<>() {
-            @Override
-            protected Optional<User> call() {
-                return authService.login(username, password);
-            }
-        };
+        Task<Optional<User>> task =
+                new Task<>() {
+                    @Override
+                    protected Optional<User> call() {
+                        return authService.login(username, password);
+                    }
+                };
 
-        task.setOnSucceeded(e -> {
-            setBusy(false);
-            Optional<User> userOpt = task.getValue();
-            if (userOpt.isEmpty()) {
-                showGlobalError("Invalid username or password.");
-                return;
-            }
-            User user = userOpt.get();
-            SessionContext.setUser(user);
-            if (rememberMeCheckBox.isSelected()) {
-                String token = generateToken();
-                authService.updateRememberMeToken(user.id(), token);
-                SessionStorage.saveToken(token);
-            } else {
-                authService.updateRememberMeToken(user.id(), null);
-                SessionStorage.clear();
-            }
-            openDashboard();
-        });
+        task.setOnSucceeded(
+                e -> {
+                    setBusy(false);
+                    Optional<User> userOpt = task.getValue();
+                    if (userOpt.isEmpty()) {
+                        showGlobalError("Invalid username or password.");
+                        return;
+                    }
+                    User user = userOpt.get();
+                    SessionContext.setUser(user);
+                    if (rememberMeCheckBox.isSelected()) {
+                        String token = generateToken();
+                        authService.updateRememberMeToken(user.id(), token);
+                        SessionStorage.saveToken(token);
+                    } else {
+                        authService.updateRememberMeToken(user.id(), null);
+                        SessionStorage.clear();
+                    }
+                    openDashboard();
+                });
 
-        task.setOnFailed(e -> {
-            setBusy(false);
-            showGlobalError("An error occurred while trying to log in. Please try again.");
-        });
+        task.setOnFailed(
+                e -> {
+                    setBusy(false);
+                    showGlobalError("An error occurred while trying to log in. Please try again.");
+                });
 
         Thread thread = new Thread(task, "login-task");
         thread.setDaemon(true);
@@ -150,7 +161,8 @@ public class LoginController {
             return;
         }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/main_layout.fxml"));
+            FXMLLoader loader =
+                    new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/main_layout.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.getScene().setRoot(root);

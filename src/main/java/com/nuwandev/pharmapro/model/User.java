@@ -15,6 +15,5 @@ public record User(
         UserStatus status,
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,
-        String rememberMeToken
-) {
+        String rememberMeToken) {
 }

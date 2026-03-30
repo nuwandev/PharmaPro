@@ -10,6 +10,5 @@ public record SaleItem(
         BigDecimal quantity,
         BigDecimal unitPrice,
         BigDecimal discountPercent,
-        BigDecimal lineTotal
-) {
+        BigDecimal lineTotal) {
 }

@@ -6,11 +6,11 @@
 -- =========================
 INSERT INTO users (username, full_name, email, password_hash, role)
 VALUES ('admin', 'System Administrator', 'admin@pharmapro.local',
-        'admin', 'Admin'),
+        '$2a$12$SuAKQoXSbGvYMXK.iAU6IenEFq5cCjCP6B6WYIgI0istDkEZvIauu', 'Admin'),
        ('pharma1', 'John Pharmacist', 'john@pharma.com',
-        'pass123', 'Pharmacist'),
+        '$2a$12$J/Zlud9e9GfL6nNPxaKin.VGagOnXHHS4taveg05mcYkhlkv9nKd6', 'Pharmacist'),
        ('cashier1', 'Jane Cashier', 'jane@pharma.com',
-        'pass123', 'Cashier');
+        '$2a$12$J/Zlud9e9GfL6nNPxaKin.VGagOnXHHS4taveg05mcYkhlkv9nKd6', 'Cashier');
 
 -- =========================
 -- CATEGORIES

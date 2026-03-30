@@ -18,6 +18,5 @@ public record Supplier(
         boolean isPreferred,
         String notes,
         OffsetDateTime createdAt,
-        OffsetDateTime updatedAt
-) {
+        OffsetDateTime updatedAt) {
 }

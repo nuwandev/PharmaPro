@@ -18,6 +18,5 @@ public record PurchaseOrder(
         BigDecimal grandTotal,
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,
-        OffsetDateTime receivedAt
-) {
+        OffsetDateTime receivedAt) {
 }

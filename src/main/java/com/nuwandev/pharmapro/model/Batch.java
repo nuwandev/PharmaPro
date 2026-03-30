@@ -20,6 +20,5 @@ public record Batch(
         String notes,
         BatchStatus status,
         OffsetDateTime createdAt,
-        OffsetDateTime updatedAt
-) {
+        OffsetDateTime updatedAt) {
 }

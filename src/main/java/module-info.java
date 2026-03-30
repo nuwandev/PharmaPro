@@ -9,9 +9,11 @@ module com.nuwandev.pharmapro {
     requires jbcrypt;
     requires java.desktop;
 
-    opens com.nuwandev.pharmapro.app to javafx.graphics;
+    opens com.nuwandev.pharmapro.app to
+            javafx.graphics;
+    opens com.nuwandev.pharmapro.ui to
+            javafx.fxml;
 
-    opens com.nuwandev.pharmapro.ui to javafx.fxml;
     exports com.nuwandev.pharmapro.ui;
 
     opens db.migration;

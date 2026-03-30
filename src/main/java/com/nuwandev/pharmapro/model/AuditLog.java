@@ -9,6 +9,5 @@ public record AuditLog(
         String entity,
         Long entityId,
         String details,
-        OffsetDateTime createdAt
-) {
+        OffsetDateTime createdAt) {
 }

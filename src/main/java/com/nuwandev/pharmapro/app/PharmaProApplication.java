@@ -26,17 +26,20 @@ public class PharmaProApplication extends Application {
             Optional<User> userOpt = userRepository.findByUsername(rememberedUsername.trim());
             if (userOpt.isPresent()) {
                 SessionContext.setUser(userOpt.get());
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/main_layout.fxml"));
+                FXMLLoader loader =
+                        new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/main_layout.fxml"));
                 root = loader.load();
                 title = "PharmaPro";
                 isMain = true;
             } else {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/login.fxml"));
+                FXMLLoader loader =
+                        new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/login.fxml"));
                 root = loader.load();
                 title = "PharmaPro Login";
             }
         } else {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/login.fxml"));
+            FXMLLoader loader =
+                    new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/login.fxml"));
             root = loader.load();
             title = "PharmaPro Login";
         }

@@ -8,6 +8,5 @@ public record HeldSale(
         Long userId,
         String itemsJson,
         String notes,
-        OffsetDateTime createdAt
-) {
+        OffsetDateTime createdAt) {
 }

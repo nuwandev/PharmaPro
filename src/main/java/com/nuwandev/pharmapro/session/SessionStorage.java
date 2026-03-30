@@ -11,7 +11,9 @@ public class SessionStorage {
     private static final Path PATH =
             Paths.get(System.getProperty("user.home"), ".pharmapro", "session.txt");
 
-    private SessionStorage() { /* Utility class: prevent instantiation */ }
+    private SessionStorage() {
+        /* Utility class: prevent instantiation */
+    }
 
     public static String load() {
         try {

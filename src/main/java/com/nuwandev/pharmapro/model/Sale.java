@@ -22,6 +22,5 @@ public record Sale(
         String cardReference,
         String notes,
         SaleStatus status,
-        OffsetDateTime createdAt
-) {
+        OffsetDateTime createdAt) {
 }

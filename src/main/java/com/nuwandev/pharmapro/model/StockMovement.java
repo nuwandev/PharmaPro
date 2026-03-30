@@ -15,6 +15,5 @@ public record StockMovement(
         Long refId,
         String note,
         Long createdBy,
-        OffsetDateTime createdAt
-) {
+        OffsetDateTime createdAt) {
 }

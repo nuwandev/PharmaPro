@@ -30,7 +30,10 @@ public final class DataSourceConfig {
     private static String value(Dotenv dotenv, String key) {
         String envValue = dotenv.get(key);
         if (envValue == null || envValue.isBlank()) {
-            throw new IllegalStateException("Required environment variable '" + key + "' is missing or empty. Application cannot start.");
+            throw new IllegalStateException(
+                    "Required environment variable '"
+                            + key
+                            + "' is missing or empty. Application cannot start.");
         }
         return envValue;
     }

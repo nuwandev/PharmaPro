@@ -21,8 +21,7 @@ public class AuthService {
         if (userOpt.isEmpty()) return Optional.empty();
 
         User user = userOpt.get();
-        // In a real application, use a secure password hashing mechanism
-        if (!password.equals(user.passwordHash())) {
+        if (!PasswordUtil.checkPassword(password, user.passwordHash())) {
             return Optional.empty();
         }
 

@@ -21,6 +21,5 @@ public record Medicine(
         boolean requiresPrescription,
         boolean allowFractionalQty,
         OffsetDateTime createdAt,
-        OffsetDateTime updatedAt
-) {
+        OffsetDateTime updatedAt) {
 }

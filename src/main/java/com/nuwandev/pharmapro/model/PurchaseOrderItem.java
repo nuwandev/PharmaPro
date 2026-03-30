@@ -10,6 +10,5 @@ public record PurchaseOrderItem(
         BigDecimal qtyOrdered,
         BigDecimal qtyReceived,
         BigDecimal unitCost,
-        BigDecimal subtotal
-) {
+        BigDecimal subtotal) {
 }
