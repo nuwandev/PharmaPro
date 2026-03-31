@@ -5,8 +5,15 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import com.nuwandev.pharmapro.model.Medicine;
+import com.nuwandev.pharmapro.service.MedicineService;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import java.sql.SQLException;
 
 public class MedicineCatalogController {
+    private final MedicineService medicineService = new MedicineService();
+    private final ObservableList<Medicine> medicineList = FXCollections.observableArrayList();
     @FXML
     private BorderPane catalogRoot;
     @FXML
@@ -42,27 +49,18 @@ public class MedicineCatalogController {
     @FXML
     private Button columnToggleBtn;
     @FXML
-    private TableView<?> medicineTable;
+    private TableView<Medicine> medicineTable;
     @FXML
     private TableColumn<?, ?> selectCol;
-    @FXML
-    private TableColumn<?, ?> medicineNameCol;
-    @FXML
-    private TableColumn<?, ?> medicineBrandCol;
-    @FXML
-    private TableColumn<?, ?> medicineCategoryCol;
-    @FXML
-    private TableColumn<?, ?> medicineUnitCol;
-    @FXML
-    private TableColumn<?, ?> medicineTotalQtyCol;
-    @FXML
-    private TableColumn<?, ?> medicineExpiringBatchesCol;
-    @FXML
-    private TableColumn<?, ?> medicineSellPriceCol;
-    @FXML
-    private TableColumn<?, ?> medicineStatusCol;
-    @FXML
-    private TableColumn<?, ?> medicineActionsCol;
+    @FXML private TableColumn<Medicine, String> medicineNameCol;
+    @FXML private TableColumn<Medicine, String> medicineBrandCol;
+    @FXML private TableColumn<Medicine, String> medicineCategoryCol;
+    @FXML private TableColumn<Medicine, String> medicineUnitCol;
+    @FXML private TableColumn<Medicine, Number> medicineTotalQtyCol;
+    @FXML private TableColumn<Medicine, Number> medicineExpiringBatchesCol;
+    @FXML private TableColumn<Medicine, Number> medicineSellPriceCol;
+    @FXML private TableColumn<Medicine, String> medicineStatusCol;
+    @FXML private TableColumn<Medicine, Void> medicineActionsCol;
     @FXML
     private HBox tableFooter;
     @FXML
@@ -128,6 +126,89 @@ public class MedicineCatalogController {
 
     @FXML
     private void openAddMedicine() {
+        openMedicineFormDialog(null);
+    }
+
+    private void openEditMedicine(Medicine medicine) {
+        openMedicineFormDialog(medicine);
+    }
+
+    private void openMedicineFormDialog(Medicine medicine) {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/medicine_form.fxml"));
+            javafx.scene.Parent root = loader.load();
+            MedicineFormController controller = loader.getController();
+            controller.setMedicine(medicine);
+            javafx.scene.control.Dialog<Void> dialog = new javafx.scene.control.Dialog<>();
+            dialog.setDialogPane((javafx.scene.control.DialogPane) root);
+            dialog.setTitle(medicine == null ? "Add Medicine" : "Edit Medicine");
+            dialog.showAndWait();
+            // After dialog closes, refresh list
+            medicineList.setAll(medicineService.listAll());
+        } catch (Exception e) {
+            // TODO: Show error dialog
+        }
+    }
+
+    private void deleteMedicine(Medicine medicine) {
+        if (medicine == null) return;
+        try {
+            medicineService.delete(medicine.id());
+            medicineList.remove(medicine);
+        } catch (Exception e) {
+            // TODO: Show error dialog
+        }
+    }
+
+    @FXML
+    public void initialize() {
+        try {
+            medicineList.setAll(medicineService.listAll());
+            medicineTable.setItems(medicineList);
+            medicineNameCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().name()));
+            medicineBrandCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().brand()));
+            medicineCategoryCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(String.valueOf(data.getValue().categoryId()))); // Replace with category name lookup if needed
+            medicineUnitCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().unit()));
+            medicineTotalQtyCol.setCellValueFactory(data -> new javafx.beans.property.SimpleIntegerProperty(0)); // TODO: Replace with real total qty
+            medicineExpiringBatchesCol.setCellValueFactory(data -> new javafx.beans.property.SimpleIntegerProperty(0)); // TODO: Replace with real expiring batch count
+            medicineSellPriceCol.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().defaultSellPrice()));
+            medicineStatusCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().status() != null ? data.getValue().status().name() : ""));
+            medicineActionsCol.setCellFactory(col -> new javafx.scene.control.TableCell<>() {
+                private final javafx.scene.control.Button editBtn = new javafx.scene.control.Button("Edit");
+                private final javafx.scene.control.Button deleteBtn = new javafx.scene.control.Button("Delete");
+                {
+                    editBtn.setOnAction(e -> openEditMedicine(getTableView().getItems().get(getIndex())));
+                    deleteBtn.setOnAction(e -> deleteMedicine(getTableView().getItems().get(getIndex())));
+                    editBtn.getStyleClass().add("btn-small");
+                    deleteBtn.getStyleClass().add("btn-danger");
+                }
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        javafx.scene.layout.HBox box = new javafx.scene.layout.HBox(6, editBtn, deleteBtn);
+                        setGraphic(box);
+                    }
+                }
+            });
+        } catch (SQLException e) {
+            // TODO: Show error dialog
+        }
+        medicineSearchField.textProperty().addListener((obs, oldVal, newVal) -> searchMedicines(newVal));
+    }
+
+    private void searchMedicines(String query) {
+        try {
+            if (query == null || query.isBlank()) {
+                medicineList.setAll(medicineService.listAll());
+            } else {
+                medicineList.setAll(medicineService.search(query));
+            }
+        } catch (SQLException e) {
+            // TODO: Show error dialog
+        }
     }
 
     @FXML
@@ -140,10 +221,18 @@ public class MedicineCatalogController {
 
     @FXML
     private void editMedicineFromDrawer() {
+        Medicine selected = getSelectedMedicine();
+        if (selected != null) openEditMedicine(selected);
     }
 
     @FXML
     private void deleteMedicineFromDrawer() {
+        Medicine selected = getSelectedMedicine();
+        if (selected != null) deleteMedicine(selected);
+    }
+
+    private Medicine getSelectedMedicine() {
+        return medicineTable.getSelectionModel().getSelectedItem();
     }
 
     @FXML
