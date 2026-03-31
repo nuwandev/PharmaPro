@@ -24,6 +24,8 @@ import java.util.ResourceBundle;
 
 public class MainLayoutController implements Initializable {
 
+    private static final String NAV_ACTIVE = "nav-item-active";
+    private static final String NAV_INACTIVE = "nav-item";
     // ── FXML fields ────────────────────────────────────────────
     @FXML
     private BorderPane mainRoot;
@@ -74,14 +76,6 @@ public class MainLayoutController implements Initializable {
     @FXML
     private Label notifBadge;
     @FXML
-    private HBox userProfileBox;
-    @FXML
-    private Label topbarUserInitials;
-    @FXML
-    private Label topbarUserName;
-    @FXML
-    private Label topbarUserRole;
-    @FXML
     private StackPane contentArea;
     @FXML
     private Label contentPlaceholder;
@@ -91,12 +85,11 @@ public class MainLayoutController implements Initializable {
     private VBox toastBox;
     @FXML
     private Label toastMessage;
-
+    @FXML
+    private Button sidebarToggleBtn;
     // ── State ───────────────────────────────────────────────────
     private Button activeNavButton;
-
-    private static final String NAV_ACTIVE = "nav-item-active";
-    private static final String NAV_INACTIVE = "nav-item";
+    private boolean sidebarCollapsed = false;
 
     // ── Init ────────────────────────────────────────────────────
     @Override
@@ -116,9 +109,6 @@ public class MainLayoutController implements Initializable {
         sidebarUserName.setText(fullName);
         sidebarUserRole.setText(role);
 
-        topbarUserInitials.setText(initials);
-        topbarUserName.setText(fullName);
-        topbarUserRole.setText(role);
     }
 
     private String buildInitials(String fullName) {
@@ -260,10 +250,9 @@ public class MainLayoutController implements Initializable {
         showToast("No new notifications", ToastType.INFO);
     }
 
-    // ── User menu ────────────────────────────────────────────────
-
+    // Sidebar user menu (left bottom corner)
     @FXML
-    private void showUserMenu(javafx.scene.input.MouseEvent event) {
+    private void showSidebarUserMenu(javafx.scene.input.MouseEvent event) {
         if (event.getButton() != MouseButton.PRIMARY) return;
         ContextMenu menu = new ContextMenu();
         MenuItem profile = new MenuItem("Profile");
@@ -273,7 +262,7 @@ public class MainLayoutController implements Initializable {
         changePassword.setOnAction(e -> showChangePasswordDialog());
         logout.setOnAction(e -> handleLogout());
         menu.getItems().addAll(profile, changePassword, logout);
-        menu.show(userProfileBox, event.getScreenX(), event.getScreenY());
+        menu.show(sidebarFooter, event.getScreenX(), event.getScreenY());
     }
 
     private void showProfileDialog() {
@@ -303,8 +292,6 @@ public class MainLayoutController implements Initializable {
     }
 
     // ── Toast system ─────────────────────────────────────────────
-
-    public enum ToastType {SUCCESS, ERROR, INFO}
 
     public void showToast(String message, ToastType type) {
         Platform.runLater(() -> {
@@ -347,5 +334,26 @@ public class MainLayoutController implements Initializable {
 
     public void showToast(String message) {
         showToast(message, ToastType.INFO);
+    }
+
+    public enum ToastType {SUCCESS, ERROR, INFO}
+
+    @FXML
+    private void toggleSidebar() {
+        sidebarCollapsed = !sidebarCollapsed;
+        sidebar.setPrefWidth(sidebarCollapsed ? 60 : 220);
+        // Hide/show sidebar text labels and section headers
+        for (javafx.scene.Node node : navContainer.getChildren()) {
+            if (node instanceof Button btn) {
+                btn.setContentDisplay(sidebarCollapsed ? javafx.scene.control.ContentDisplay.GRAPHIC_ONLY : javafx.scene.control.ContentDisplay.LEFT);
+            } else if (node instanceof Label lbl) {
+                lbl.setVisible(!sidebarCollapsed);
+                lbl.setManaged(!sidebarCollapsed);
+            }
+        }
+        sidebarBrand.setVisible(!sidebarCollapsed);
+        sidebarBrand.setManaged(!sidebarCollapsed);
+        sidebarFooter.setVisible(!sidebarCollapsed);
+        sidebarFooter.setManaged(!sidebarCollapsed);
     }
 }

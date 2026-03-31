@@ -7,16 +7,15 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1"
-            fx:id="mainRoot"
-            minHeight="700" minWidth="1200"
-            prefHeight="1000" prefWidth="1600"
-            stylesheets="@css/pharmapro.css"
-            xmlns="http://javafx.com/javafx/21.0.6"
-            fx:controller="com.nuwandev.pharmapro.ui.MainLayoutController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainRoot" minHeight="700" minWidth="1200" prefHeight="1000"
+            prefWidth="1600" stylesheets="@css/pharmapro.css"
+            xmlns="http://javafx.com/javafx/17.0.12" fx:controller="com.nuwandev.pharmapro.ui.MainLayoutController">
 
     <left>
         <VBox fx:id="sidebar" spacing="0" styleClass="sidebar">
+
+            <!-- Sidebar Toggle Button -->
+            <Button fx:id="sidebarToggleBtn" onAction="#toggleSidebar" styleClass="sidebar-toggle-btn" text="☰"/>
 
             <!-- Brand -->
             <HBox fx:id="sidebarBrand" alignment="CENTER_LEFT" spacing="12" styleClass="sidebar-brand">
@@ -30,76 +29,80 @@
             </HBox>
 
             <!-- Nav -->
-            <ScrollPane fx:id="sidebarScrollPane"
-                        fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
-                        style="-fx-background-color: transparent; -fx-border-color: transparent;"
+            <ScrollPane fx:id="sidebarScrollPane" fitToWidth="true" hbarPolicy="NEVER"
+                        style="-fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED"
                         VBox.vgrow="ALWAYS">
                 <VBox fx:id="navContainer" spacing="2"
                       style="-fx-padding: 16px 12px 12px 12px; -fx-background-color: transparent;">
 
-                    <Label styleClass="sidebar-section-label" text="MAIN"
-                           style="-fx-padding: 0 4px 6px 4px;"/>
+                    <Label style="-fx-padding: 0 4px 6px 4px;" styleClass="sidebar-section-label" text="MAIN"/>
 
-                    <Button fx:id="navDashboard" maxWidth="Infinity" graphicTextGap="10"
-                            onAction="#navigateToDashboard"
+                    <Button fx:id="navDashboard" graphicTextGap="10" maxWidth="Infinity" onAction="#navigateToDashboard"
                             styleClass="nav-item, nav-item-active" text="  Dashboard">
+                        <tooltip><Tooltip text="Dashboard"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 15px; -fx-text-fill: inherit;" text="&#9622;"/>
+                            <Label style="-fx-font-size: 15px; -fx-text-fill: inherit;" text="▖"/>
                         </graphic>
                     </Button>
 
-                    <Button fx:id="navPOS" maxWidth="Infinity" graphicTextGap="10"
-                            onAction="#navigateToPOS" styleClass="nav-item" text="  Point of Sale">
+                    <Button fx:id="navPOS" graphicTextGap="10" maxWidth="Infinity" onAction="#navigateToPOS"
+                            styleClass="nav-item" text="  Point of Sale">
+                        <tooltip><Tooltip text="Point of Sale"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="&#128722;"/>
+                            <Label style="-fx-font-size: 14px;" text="🛒"/>
                         </graphic>
                     </Button>
 
-                    <Label styleClass="sidebar-section-label" text="INVENTORY"
-                           style="-fx-padding: 14px 4px 6px 4px;"/>
+                    <Label style="-fx-padding: 14px 4px 6px 4px;" styleClass="sidebar-section-label" text="INVENTORY"/>
 
-                    <Button fx:id="navMedicines" maxWidth="Infinity" graphicTextGap="10"
-                            onAction="#navigateToMedicines" styleClass="nav-item" text="  Medicines">
+                    <Button fx:id="navMedicines" graphicTextGap="10" maxWidth="Infinity" onAction="#navigateToMedicines"
+                            styleClass="nav-item" text="  Medicines">
+                        <tooltip><Tooltip text="Medicines"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="&#128138;"/>
+                            <Label style="-fx-font-size: 14px;" text="💊"/>
                         </graphic>
                     </Button>
 
-                    <Button fx:id="navBatches" maxWidth="Infinity" graphicTextGap="10"
-                            onAction="#navigateToBatches" styleClass="nav-item" text="  Batch Management">
+                    <Button fx:id="navBatches" graphicTextGap="10" maxWidth="Infinity" onAction="#navigateToBatches"
+                            styleClass="nav-item" text="  Batch Management">
+                        <tooltip><Tooltip text="Batch Management"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="&#128230;"/>
+                            <Label style="-fx-font-size: 14px;" text="📦"/>
                         </graphic>
                     </Button>
 
-                    <Button fx:id="navPurchaseOrders" maxWidth="Infinity" graphicTextGap="10"
+                    <Button fx:id="navPurchaseOrders" graphicTextGap="10" maxWidth="Infinity"
                             onAction="#navigateToPurchaseOrders" styleClass="nav-item" text="  Purchase Orders">
+                        <tooltip><Tooltip text="Purchase Orders"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="&#128203;"/>
+                            <Label style="-fx-font-size: 14px;" text="📋"/>
                         </graphic>
                     </Button>
 
-                    <Button fx:id="navSuppliers" maxWidth="Infinity" graphicTextGap="10"
-                            onAction="#navigateToSuppliers" styleClass="nav-item" text="  Suppliers">
+                    <Button fx:id="navSuppliers" graphicTextGap="10" maxWidth="Infinity" onAction="#navigateToSuppliers"
+                            styleClass="nav-item" text="  Suppliers">
+                        <tooltip><Tooltip text="Suppliers"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="&#127981;"/>
+                            <Label style="-fx-font-size: 14px;" text="🏭"/>
                         </graphic>
                     </Button>
 
-                    <Label styleClass="sidebar-section-label" text="REPORTS &amp; SETTINGS"
-                           style="-fx-padding: 14px 4px 6px 4px;"/>
+                    <Label style="-fx-padding: 14px 4px 6px 4px;" styleClass="sidebar-section-label"
+                           text="REPORTS &amp; SETTINGS"/>
 
-                    <Button fx:id="navReports" maxWidth="Infinity" graphicTextGap="10"
-                            onAction="#navigateToReports" styleClass="nav-item" text="  Reports">
+                    <Button fx:id="navReports" graphicTextGap="10" maxWidth="Infinity" onAction="#navigateToReports"
+                            styleClass="nav-item" text="  Reports">
+                        <tooltip><Tooltip text="Reports"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="&#128202;"/>
+                            <Label style="-fx-font-size: 14px;" text="📊"/>
                         </graphic>
                     </Button>
 
-                    <Button fx:id="navSettings" maxWidth="Infinity" graphicTextGap="10"
-                            onAction="#navigateToSettings" styleClass="nav-item" text="  Settings">
+                    <Button fx:id="navSettings" graphicTextGap="10" maxWidth="Infinity" onAction="#navigateToSettings"
+                            styleClass="nav-item" text="  Settings">
+                        <tooltip><Tooltip text="Settings"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="&#9881;"/>
+                            <Label style="-fx-font-size: 14px;" text="⚙"/>
                         </graphic>
                     </Button>
 
@@ -107,7 +110,8 @@
             </ScrollPane>
 
             <!-- Footer -->
-            <HBox fx:id="sidebarFooter" alignment="CENTER_LEFT" spacing="10" styleClass="sidebar-footer">
+            <HBox fx:id="sidebarFooter" alignment="CENTER_LEFT" onMouseClicked="#showSidebarUserMenu" spacing="10"
+                  styleClass="sidebar-footer">
                 <StackPane styleClass="user-avatar">
                     <Label fx:id="sidebarUserInitials"
                            style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;" text="AU"/>
@@ -116,11 +120,11 @@
                     <Label fx:id="sidebarUserName"
                            style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #e5e7eb;"
                            text="Admin User"/>
-                    <Label fx:id="sidebarUserRole"
-                           style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" text="Administrator"/>
+                    <Label fx:id="sidebarUserRole" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"
+                           text="Administrator"/>
                 </VBox>
-                <Button fx:id="logoutBtn" onAction="#handleLogout" styleClass="btn-icon"
-                        style="-fx-text-fill: #6b7280; -fx-font-size: 16px;" text="&#8677;">
+                <Button fx:id="logoutBtn" onAction="#handleLogout" style="-fx-text-fill: #6b7280; -fx-font-size: 16px;"
+                        styleClass="btn-icon" text="⇥">
                     <tooltip>
                         <Tooltip text="Logout"/>
                     </tooltip>
@@ -146,47 +150,26 @@
                 <!-- Search -->
                 <StackPane alignment="CENTER_LEFT" prefWidth="260">
                     <TextField fx:id="globalSearchField" promptText="Quick search..."
-                               styleClass="topbar-search"
-                               style="-fx-padding: 8px 14px 8px 36px;"/>
+                               style="-fx-padding: 8px 14px 8px 36px;" styleClass="topbar-search"/>
                     <Label mouseTransparent="true"
-                           style="-fx-padding: 0 0 0 12px; -fx-font-size: 13px; -fx-text-fill: #9ca3af;"
-                           text="&#128269;"/>
+                           style="-fx-padding: 0 0 0 12px; -fx-font-size: 13px; -fx-text-fill: #9ca3af;" text="🔍"/>
                 </StackPane>
 
                 <!-- Bell + badge -->
-                <StackPane alignment="TOP_RIGHT" prefWidth="44" prefHeight="44">
-                    <Button fx:id="notificationBtn" onAction="#showNotifications"
-                            styleClass="notif-btn" StackPane.alignment="CENTER">
+                <StackPane alignment="TOP_RIGHT" prefHeight="44" prefWidth="44">
+                    <Button fx:id="notificationBtn" onAction="#showNotifications" styleClass="notif-btn"
+                            StackPane.alignment="CENTER">
                         <graphic>
-                            <Label style="-fx-font-size: 16px;" text="&#128276;"/>
+                            <Label style="-fx-font-size: 16px;" text="🔔"/>
                         </graphic>
                         <tooltip>
                             <Tooltip text="Notifications"/>
                         </tooltip>
                     </Button>
-                    <Label fx:id="notifBadge" styleClass="notif-badge" text="3"
-                           StackPane.alignment="TOP_RIGHT"
-                           style="-fx-translate-x: 2px; -fx-translate-y: 2px;"
-                           visible="true"/>
+                    <Label fx:id="notifBadge" style="-fx-translate-x: 2px; -fx-translate-y: 2px;"
+                           styleClass="notif-badge" text="3" visible="true" StackPane.alignment="TOP_RIGHT"/>
                 </StackPane>
 
-                <Separator opacity="0.3" orientation="VERTICAL" prefHeight="32"/>
-
-                <!-- User -->
-                <HBox fx:id="userProfileBox" alignment="CENTER_LEFT" onMouseClicked="#showUserMenu"
-                      spacing="10"
-                      style="-fx-cursor: hand; -fx-padding: 6px 10px; -fx-background-radius: 8px;">
-                    <StackPane styleClass="user-avatar">
-                        <Label fx:id="topbarUserInitials"
-                               style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;"
-                               text="AU"/>
-                    </StackPane>
-                    <VBox spacing="2" alignment="CENTER_LEFT">
-                        <Label fx:id="topbarUserName" styleClass="user-name-label" text="Admin User"/>
-                        <Label fx:id="topbarUserRole" styleClass="user-role-label" text="Administrator"/>
-                    </VBox>
-                    <Label style="-fx-font-size: 11px; -fx-text-fill: #9ca3af;" text="&#9660;"/>
-                </HBox>
 
             </HBox>
 
@@ -200,16 +183,11 @@
 
     <!-- TOAST -->
     <top>
-        <StackPane fx:id="toastContainer" alignment="TOP_RIGHT"
-                   managed="false" mouseTransparent="true" visible="false"
-                   style="-fx-padding: 24px 24px 0 0;">
+        <StackPane fx:id="toastContainer" alignment="TOP_RIGHT" managed="false" mouseTransparent="true"
+                   style="-fx-padding: 24px 24px 0 0;" visible="false">
             <VBox fx:id="toastBox" spacing="8"
-                  style="-fx-background-color: white; -fx-background-radius: 10px;
-                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.14), 16, 0, 0, 4);
-                         -fx-padding: 14px 18px; -fx-max-width: 300px;
-                         -fx-border-color: #e5e7eb; -fx-border-width: 1px; -fx-border-radius: 10px;">
-                <Label fx:id="toastMessage" styleClass="body-text"
-                       text="Operation completed" wrapText="true"/>
+                  style="-fx-background-color: white; -fx-background-radius: 10px;                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.14), 16, 0, 0, 4);                          -fx-padding: 14px 18px; -fx-max-width: 300px;                          -fx-border-color: #e5e7eb; -fx-border-width: 1px; -fx-border-radius: 10px;">
+                <Label fx:id="toastMessage" styleClass="body-text" text="Operation completed" wrapText="true"/>
             </VBox>
         </StackPane>
     </top>
