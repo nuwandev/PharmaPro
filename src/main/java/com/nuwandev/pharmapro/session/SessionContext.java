@@ -24,4 +24,12 @@ public class SessionContext {
     public static boolean isLoggedIn() {
         return currentUser != null;
     }
+
+    public static String getFullName() {
+        return currentUser != null ? currentUser.fullName() : null;
+    }
+
+    public static String getRole() {
+        return currentUser != null ? (currentUser.role() != null ? currentUser.role().name() : null) : null;
+    }
 }
