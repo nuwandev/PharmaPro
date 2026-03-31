@@ -1,17 +1,21 @@
 package com.nuwandev.pharmapro.ui;
 
-import com.nuwandev.pharmapro.session.SessionContext;
 import com.nuwandev.pharmapro.model.User;
+import com.nuwandev.pharmapro.session.SessionContext;
 import javafx.fxml.FXML;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class ProfileDialogController {
-    @FXML private DialogPane dialogPane;
-    @FXML private TextField fullNameField;
-    @FXML private TextField usernameField;
-    @FXML private TextField roleField;
+    @FXML
+    private DialogPane dialogPane;
+    @FXML
+    private TextField fullNameField;
+    @FXML
+    private TextField usernameField;
+    @FXML
+    private TextField roleField;
 
     @FXML
     public void initialize() {

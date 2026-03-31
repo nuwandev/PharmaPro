@@ -1,11 +1,16 @@
 package com.nuwandev.pharmapro.repository;
 
-import com.nuwandev.pharmapro.model.Medicine;
-import com.nuwandev.pharmapro.enums.MedicineStatus;
 import com.nuwandev.pharmapro.database.DatabaseContext;
+import com.nuwandev.pharmapro.enums.MedicineStatus;
+import com.nuwandev.pharmapro.model.Medicine;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class MedicineRepository {
     public List<Medicine> search(String query) throws SQLException {

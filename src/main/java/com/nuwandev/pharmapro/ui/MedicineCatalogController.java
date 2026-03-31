@@ -1,14 +1,15 @@
 package com.nuwandev.pharmapro.ui;
 
+import com.nuwandev.pharmapro.model.Medicine;
+import com.nuwandev.pharmapro.service.MedicineService;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import com.nuwandev.pharmapro.model.Medicine;
-import com.nuwandev.pharmapro.service.MedicineService;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
 import java.sql.SQLException;
 
 public class MedicineCatalogController {
@@ -52,15 +53,24 @@ public class MedicineCatalogController {
     private TableView<Medicine> medicineTable;
     @FXML
     private TableColumn<?, ?> selectCol;
-    @FXML private TableColumn<Medicine, String> medicineNameCol;
-    @FXML private TableColumn<Medicine, String> medicineBrandCol;
-    @FXML private TableColumn<Medicine, String> medicineCategoryCol;
-    @FXML private TableColumn<Medicine, String> medicineUnitCol;
-    @FXML private TableColumn<Medicine, Number> medicineTotalQtyCol;
-    @FXML private TableColumn<Medicine, Number> medicineExpiringBatchesCol;
-    @FXML private TableColumn<Medicine, Number> medicineSellPriceCol;
-    @FXML private TableColumn<Medicine, String> medicineStatusCol;
-    @FXML private TableColumn<Medicine, Void> medicineActionsCol;
+    @FXML
+    private TableColumn<Medicine, String> medicineNameCol;
+    @FXML
+    private TableColumn<Medicine, String> medicineBrandCol;
+    @FXML
+    private TableColumn<Medicine, String> medicineCategoryCol;
+    @FXML
+    private TableColumn<Medicine, String> medicineUnitCol;
+    @FXML
+    private TableColumn<Medicine, Number> medicineTotalQtyCol;
+    @FXML
+    private TableColumn<Medicine, Number> medicineExpiringBatchesCol;
+    @FXML
+    private TableColumn<Medicine, Number> medicineSellPriceCol;
+    @FXML
+    private TableColumn<Medicine, String> medicineStatusCol;
+    @FXML
+    private TableColumn<Medicine, Void> medicineActionsCol;
     @FXML
     private HBox tableFooter;
     @FXML
@@ -139,12 +149,30 @@ public class MedicineCatalogController {
             javafx.scene.Parent root = loader.load();
             MedicineFormController controller = loader.getController();
             controller.setMedicine(medicine);
-            javafx.scene.control.Dialog<Void> dialog = new javafx.scene.control.Dialog<>();
-            dialog.setDialogPane((javafx.scene.control.DialogPane) root);
-            dialog.setTitle(medicine == null ? "Add Medicine" : "Edit Medicine");
-            dialog.showAndWait();
-            // After dialog closes, refresh list
-            medicineList.setAll(medicineService.listAll());
+
+            javafx.stage.Stage dialogStage = new javafx.stage.Stage();
+            javafx.scene.Scene scene = new javafx.scene.Scene(root);
+            scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+            dialogStage.setScene(scene);
+            dialogStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            dialogStage.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+            dialogStage.setTitle(medicine == null ? "Add Medicine" : "Edit Medicine");
+
+            // Fade in
+            root.setOpacity(0);
+            dialogStage.show();
+            javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(javafx.util.Duration.millis(180), root);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+
+            dialogStage.setOnShown(ev -> root.requestFocus());
+            dialogStage.setOnHiding(ev -> {
+                try {
+                    medicineList.setAll(medicineService.listAll());
+                } catch (Exception ignored) {
+                }
+            });
         } catch (Exception e) {
             // TODO: Show error dialog
         }
@@ -176,12 +204,14 @@ public class MedicineCatalogController {
             medicineActionsCol.setCellFactory(col -> new javafx.scene.control.TableCell<>() {
                 private final javafx.scene.control.Button editBtn = new javafx.scene.control.Button("Edit");
                 private final javafx.scene.control.Button deleteBtn = new javafx.scene.control.Button("Delete");
+
                 {
                     editBtn.setOnAction(e -> openEditMedicine(getTableView().getItems().get(getIndex())));
                     deleteBtn.setOnAction(e -> deleteMedicine(getTableView().getItems().get(getIndex())));
                     editBtn.getStyleClass().add("btn-small");
                     deleteBtn.getStyleClass().add("btn-danger");
                 }
+
                 @Override
                 protected void updateItem(Void item, boolean empty) {
                     super.updateItem(item, empty);

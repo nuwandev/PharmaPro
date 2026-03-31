@@ -1,31 +1,17 @@
 package com.nuwandev.pharmapro.ui;
 
+import com.nuwandev.pharmapro.enums.MedicineStatus;
+import com.nuwandev.pharmapro.model.Medicine;
+import com.nuwandev.pharmapro.service.MedicineService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import com.nuwandev.pharmapro.model.Medicine;
-import com.nuwandev.pharmapro.enums.MedicineStatus;
-import com.nuwandev.pharmapro.service.MedicineService;
-
 public class MedicineFormController {
     private MedicineService medicineService = new MedicineService();
     private Medicine editingMedicine = null;
-
-    public void setMedicine(Medicine medicine) {
-        this.editingMedicine = medicine;
-        if (medicine != null) {
-            medicineNameField.setText(medicine.name());
-            brandField.setText(medicine.brand());
-            barcodeField.setText(medicine.barcode());
-            descriptionField.setText(medicine.description());
-            statusActiveRadio.setSelected(medicine.status() == MedicineStatus.ACTIVE);
-            statusInactiveRadio.setSelected(medicine.status() == MedicineStatus.INACTIVE);
-            // TODO: Set category/unit
-        }
-    }
     @FXML
     private VBox medicineFormRoot;
     @FXML
@@ -105,30 +91,49 @@ public class MedicineFormController {
     @FXML
     private TextField initBatchPurchasePriceField;
 
+    public void setMedicine(Medicine medicine) {
+        this.editingMedicine = medicine;
+        if (medicine != null) {
+            medicineNameField.setText(medicine.name());
+            brandField.setText(medicine.brand());
+            barcodeField.setText(medicine.barcode());
+            descriptionField.setText(medicine.description());
+            statusActiveRadio.setSelected(medicine.status() == MedicineStatus.ACTIVE);
+            statusInactiveRadio.setSelected(medicine.status() == MedicineStatus.INACTIVE);
+            // TODO: Set category/unit
+        }
+    }
+
+    // --- Close dialog with fade-out ---
     @FXML
     private void closeForm() {
-        ((javafx.stage.Stage) medicineFormRoot.getScene().getWindow()).close();
+        javafx.stage.Stage stage = (javafx.stage.Stage) medicineFormRoot.getScene().getWindow();
+        javafx.animation.FadeTransition fade = new javafx.animation.FadeTransition(javafx.util.Duration.millis(180), medicineFormRoot);
+        fade.setFromValue(1);
+        fade.setToValue(0);
+        fade.setOnFinished(e -> stage.close());
+        fade.play();
     }
 
     @FXML
     private void saveMedicine() {
         try {
             Medicine m = new Medicine(
-                editingMedicine != null ? editingMedicine.id() : null,
-                medicineNameField.getText(),
-                brandField.getText(),
-                null, // TODO: categoryId
-                unitCombo.getValue() != null ? unitCombo.getValue().toString() : null,
-                barcodeField.getText(),
-                statusActiveRadio.isSelected() ? MedicineStatus.ACTIVE : MedicineStatus.INACTIVE,
-                descriptionField.getText(),
-                null, // TODO: defaultPurchasePrice
-                null, // TODO: defaultSellPrice
-                0, // TODO: reorderLevel
-                null, // TODO: taxRate
-                false, // TODO: requiresPrescription
-                false, // TODO: allowFractionalQty
-                null, null
+                    editingMedicine != null ? editingMedicine.id() : null,
+                    medicineNameField.getText(),
+                    brandField.getText(),
+                    null, // TODO: categoryId
+                    unitCombo.getValue() != null ? unitCombo.getValue().toString() : null,
+                    barcodeField.getText(),
+                    statusActiveRadio.isSelected() ? MedicineStatus.ACTIVE : MedicineStatus.INACTIVE,
+                    descriptionField.getText(),
+                    null, // TODO: defaultPurchasePrice
+                    null, // TODO: defaultSellPrice
+                    0, // TODO: reorderLevel
+                    null, // TODO: taxRate
+                    false, // TODO: requiresPrescription
+                    false, // TODO: allowFractionalQty
+                    null, null
             );
             if (editingMedicine == null) {
                 medicineService.add(m);
@@ -147,6 +152,7 @@ public class MedicineFormController {
 
     @FXML
     private void cancelForm() {
+        closeForm();
     }
 
     @FXML

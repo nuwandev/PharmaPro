@@ -1,17 +1,19 @@
 package com.nuwandev.pharmapro.ui;
 
-import com.nuwandev.pharmapro.session.SessionContext;
-import com.nuwandev.pharmapro.service.AuthService;
 import javafx.fxml.FXML;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 
 public class ChangePasswordDialogController {
-    @FXML private DialogPane dialogPane;
-    @FXML private PasswordField currentPasswordField;
-    @FXML private PasswordField newPasswordField;
-    @FXML private PasswordField confirmPasswordField;
+    @FXML
+    private DialogPane dialogPane;
+    @FXML
+    private PasswordField currentPasswordField;
+    @FXML
+    private PasswordField newPasswordField;
+    @FXML
+    private PasswordField confirmPasswordField;
 
     @FXML
     private void handleCancel() {
