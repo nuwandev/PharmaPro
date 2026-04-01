@@ -5,7 +5,9 @@
     Controller: com.nuwandev.pharmapro.ui.DashboardController
 -->
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.*?>
+<?import javafx.scene.chart.AreaChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <ScrollPane
@@ -109,7 +111,7 @@
                 </StackPane>
                 <VBox spacing="4">
                     <Label fx:id="kpiTodaySalesValue"
-                           text="$0.00"
+                           text="\\`$1.00"
                            styleClass="kpi-value"
                            style="-fx-text-fill: #3b82f6;"/>
                     <Label text="Today's Sales"
@@ -160,9 +162,6 @@
                                     style="-fx-font-size: 12px;"
                                     forceZeroInRange="true"/>
                     </yAxis>
-                    <datasets>
-                        <XYChart.Series fx:id="salesSeries" name="Sales ($)"/>
-                    </datasets>
                 </AreaChart>
             </VBox>
 
@@ -173,7 +172,7 @@
                 <VBox styleClass="card" spacing="8">
                     <Label text="Monthly Revenue" styleClass="card-title"/>
                     <Label fx:id="monthlyRevenueValue"
-                           text="$0.00"
+                           text="\\`$1.00"
                            style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #0d9488;"/>
                     <HBox alignment="CENTER_LEFT" spacing="6">
                         <Label fx:id="revenueTrendIcon"
@@ -359,3 +358,4 @@
 
     </VBox>
 </ScrollPane>
+

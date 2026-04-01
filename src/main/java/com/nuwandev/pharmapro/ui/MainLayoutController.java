@@ -85,17 +85,40 @@ public class MainLayoutController implements Initializable {
     private VBox toastBox;
     @FXML
     private Label toastMessage;
-    @FXML
-    private Button sidebarToggleBtn;
     // ── State ───────────────────────────────────────────────────
     private Button activeNavButton;
-    private boolean sidebarCollapsed = false;
 
     // ── Init ────────────────────────────────────────────────────
+    private final Button[] navButtonsArr = new Button[8];
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        navButtonsArr[0] = navDashboard;
+        navButtonsArr[1] = navPOS;
+        navButtonsArr[2] = navMedicines;
+        navButtonsArr[3] = navBatches;
+        navButtonsArr[4] = navPurchaseOrders;
+        navButtonsArr[5] = navSuppliers;
+        navButtonsArr[6] = navReports;
+        navButtonsArr[7] = navSettings;
         populateUserInfo();
-        navigateToDashboard();   // load default screen
+        clearAllNavActive();
+        setActiveNav(navDashboard);
+        navigateToDashboard();
+        // Add a debounce to all nav buttons to prevent rapid clicks
+        for (Button btn : navButtonsArr) {
+            btn.setOnMouseClicked(e -> {
+                if (e.getClickCount() > 1) e.consume();
+            });
+        }
+    }
+
+    private void clearAllNavActive() {
+        for (Button btn : navButtonsArr) {
+            btn.getStyleClass().remove(NAV_ACTIVE);
+            if (!btn.getStyleClass().contains(NAV_INACTIVE)) {
+                btn.getStyleClass().add(NAV_INACTIVE);
+            }
+        }
     }
 
     private void populateUserInfo() {
@@ -161,47 +184,35 @@ public class MainLayoutController implements Initializable {
     }
 
     private void loadScreen(String fxmlFile, Button navBtn, String pageTitle, String breadcrumb) {
+        Button prevActive = activeNavButton;
+        setActiveNav(navBtn);
         try {
             URL resource = getClass().getResource("/com/nuwandev/pharmapro/" + fxmlFile);
             if (resource == null) {
                 showToast("Screen not found: " + fxmlFile, ToastType.ERROR);
+                setActiveNav(prevActive); // revert
                 return;
             }
-
             FXMLLoader loader = new FXMLLoader(resource);
             Parent screen = loader.load();
-
-            // Swap active nav button styling
-            setActiveNav(navBtn);
-
-            // Update topbar
             topbarPageTitle.setText(pageTitle);
             topbarBreadcrumb.setText(breadcrumb);
-
-            // Fade transition for smooth screen swap
             screen.setOpacity(0);
             contentArea.getChildren().setAll(screen);
-
             FadeTransition fade = new FadeTransition(Duration.millis(180), screen);
             fade.setFromValue(0);
             fade.setToValue(1);
             fade.play();
-
         } catch (IOException e) {
             e.printStackTrace();
             showToast("Failed to load screen: " + fxmlFile, ToastType.ERROR);
+            setActiveNav(prevActive); // revert
         }
     }
 
     private void setActiveNav(Button next) {
-        // Remove active style from current button
-        if (activeNavButton != null) {
-            activeNavButton.getStyleClass().remove(NAV_ACTIVE);
-            if (!activeNavButton.getStyleClass().contains(NAV_INACTIVE)) {
-                activeNavButton.getStyleClass().add(NAV_INACTIVE);
-            }
-        }
-
+        // Remove active style from all nav buttons
+        clearAllNavActive();
         // Apply active style to new button
         next.getStyleClass().remove(NAV_INACTIVE);
         if (!next.getStyleClass().contains(NAV_ACTIVE)) {
@@ -337,23 +348,4 @@ public class MainLayoutController implements Initializable {
     }
 
     public enum ToastType {SUCCESS, ERROR, INFO}
-
-    @FXML
-    private void toggleSidebar() {
-        sidebarCollapsed = !sidebarCollapsed;
-        sidebar.setPrefWidth(sidebarCollapsed ? 60 : 220);
-        // Hide/show sidebar text labels and section headers
-        for (javafx.scene.Node node : navContainer.getChildren()) {
-            if (node instanceof Button btn) {
-                btn.setContentDisplay(sidebarCollapsed ? javafx.scene.control.ContentDisplay.GRAPHIC_ONLY : javafx.scene.control.ContentDisplay.LEFT);
-            } else if (node instanceof Label lbl) {
-                lbl.setVisible(!sidebarCollapsed);
-                lbl.setManaged(!sidebarCollapsed);
-            }
-        }
-        sidebarBrand.setVisible(!sidebarCollapsed);
-        sidebarBrand.setManaged(!sidebarCollapsed);
-        sidebarFooter.setVisible(!sidebarCollapsed);
-        sidebarFooter.setManaged(!sidebarCollapsed);
-    }
 }

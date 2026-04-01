@@ -5,7 +5,7 @@ import com.nuwandev.pharmapro.session.SessionContext;
 import javafx.fxml.FXML;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class ProfileDialogController {
     @FXML
@@ -29,7 +29,9 @@ public class ProfileDialogController {
 
     @FXML
     private void handleClose() {
-        Stage stage = (Stage) dialogPane.getScene().getWindow();
-        stage.close();
+        Window window = dialogPane.getScene() != null ? dialogPane.getScene().getWindow() : null;
+        if (window != null) {
+            window.hide();
+        }
     }
 }

@@ -117,4 +117,19 @@ public class DashboardController {
     private Button viewAllLowStockBtn;
     @FXML
     private Button viewAllSalesBtn;
+
+    @FXML
+    private void viewAllExpiring() {
+        // Handle view all expiring
+    }
+
+    @FXML
+    private void viewAllLowStock() {
+        // Handle view all low stock
+    }
+
+    @FXML
+    private void viewAllSales() {
+        // Handle view all sales
+    }
 }

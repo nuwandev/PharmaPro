@@ -14,9 +14,6 @@
     <left>
         <VBox fx:id="sidebar" spacing="0" styleClass="sidebar">
 
-            <!-- Sidebar Toggle Button -->
-            <Button fx:id="sidebarToggleBtn" onAction="#toggleSidebar" styleClass="sidebar-toggle-btn" text="☰"/>
-
             <!-- Brand -->
             <HBox fx:id="sidebarBrand" alignment="CENTER_LEFT" spacing="12" styleClass="sidebar-brand">
                 <StackPane prefHeight="40" prefWidth="40" styleClass="sidebar-brand-icon">

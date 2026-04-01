@@ -334,10 +334,6 @@
                                     tickLabelFill="#9ca3af"
                                     forceZeroInRange="true"/>
                     </yAxis>
-                    <datasets>
-                        <XYChart.Series fx:id="reportChartSeries1" name="Series 1"/>
-                        <XYChart.Series fx:id="reportChartSeries2" name="Series 2"/>
-                    </datasets>
                 </BarChart>
             </StackPane>
 

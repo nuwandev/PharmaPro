@@ -3,7 +3,7 @@ package com.nuwandev.pharmapro.ui;
 import javafx.fxml.FXML;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.PasswordField;
-import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class ChangePasswordDialogController {
     @FXML
@@ -17,8 +17,10 @@ public class ChangePasswordDialogController {
 
     @FXML
     private void handleCancel() {
-        Stage stage = (Stage) dialogPane.getScene().getWindow();
-        stage.close();
+        Window window = dialogPane.getScene() != null ? dialogPane.getScene().getWindow() : null;
+        if (window != null) {
+            window.hide();
+        }
     }
 
     @FXML
@@ -34,7 +36,9 @@ public class ChangePasswordDialogController {
             return;
         }
         // TODO: Validate current password and update using AuthService
-        Stage stage = (Stage) dialogPane.getScene().getWindow();
-        stage.close();
+        Window window = dialogPane.getScene() != null ? dialogPane.getScene().getWindow() : null;
+        if (window != null) {
+            window.hide();
+        }
     }
 }
