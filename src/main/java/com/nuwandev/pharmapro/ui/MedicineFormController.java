@@ -10,7 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class MedicineFormController {
-    private MedicineService medicineService = new MedicineService();
+    private final MedicineService medicineService = new MedicineService();
     private Medicine editingMedicine = null;
     @FXML
     private VBox medicineFormRoot;
@@ -25,7 +25,7 @@ public class MedicineFormController {
     @FXML
     private ScrollPane formScrollPane;
     @FXML
-    private VBox formFooter;
+    private HBox formFooter;
     @FXML
     private Label formGlobalError;
     @FXML
@@ -91,7 +91,7 @@ public class MedicineFormController {
     @FXML
     private TextField initBatchPurchasePriceField;
 
-    public void setMedicine(Medicine medicine) {
+    void setMedicine(Medicine medicine) {
         this.editingMedicine = medicine;
         if (medicine != null) {
             medicineNameField.setText(medicine.name());

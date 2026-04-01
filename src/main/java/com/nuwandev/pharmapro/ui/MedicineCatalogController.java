@@ -5,10 +5,16 @@ import com.nuwandev.pharmapro.service.MedicineService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.sql.SQLException;
 
@@ -145,18 +151,27 @@ public class MedicineCatalogController {
 
     private void openMedicineFormDialog(Medicine medicine) {
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/medicine_form.fxml"));
-            javafx.scene.Parent root = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/nuwandev/pharmapro/add_edit_medicine.fxml"));
+            Parent root = loader.load();
             MedicineFormController controller = loader.getController();
             controller.setMedicine(medicine);
 
-            javafx.stage.Stage dialogStage = new javafx.stage.Stage();
-            javafx.scene.Scene scene = new javafx.scene.Scene(root);
+            Stage dialogStage = new Stage();
+            Scene scene = new Scene(root);
             scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
             dialogStage.setScene(scene);
-            dialogStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            dialogStage.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.initStyle(StageStyle.TRANSPARENT);
+            if (catalogRoot != null && catalogRoot.getScene() != null && catalogRoot.getScene().getWindow() instanceof Stage owner) {
+                dialogStage.initOwner(owner);
+            }
             dialogStage.setTitle(medicine == null ? "Add Medicine" : "Edit Medicine");
+
+            scene.getRoot().setOnKeyPressed(event -> {
+                if (event.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
+                    dialogStage.close();
+                }
+            });
 
             // Fade in
             root.setOpacity(0);
@@ -174,7 +189,7 @@ public class MedicineCatalogController {
                 }
             });
         } catch (Exception e) {
-            // TODO: Show error dialog
+            e.printStackTrace();
         }
     }
 
