@@ -27,7 +27,7 @@
             <Label text="Generate Reports"
                    styleClass="title-small"/>
 
-            <HBox spacing="16" alignment="CENTER_LEFT" wrap="true">
+            <FlowPane hgap="16" vgap="12" prefWrapLength="980" alignment="CENTER_LEFT">
 
                 <!-- Report Type -->
                 <VBox spacing="4" minWidth="180">
@@ -73,9 +73,6 @@
                               promptText="All"/>
                 </VBox>
 
-                <!-- Spacer -->
-                <Region HBox.hgrow="ALWAYS"/>
-
                 <!-- Generate Button -->
                 <VBox alignment="BOTTOM_LEFT" spacing="4">
                     <Label text=" " styleClass="form-label"/>
@@ -86,7 +83,7 @@
                             onAction="#generateReport"/>
                 </VBox>
 
-            </HBox>
+            </FlowPane>
 
             <!-- Quick Export Row -->
             <HBox spacing="10" alignment="CENTER_LEFT">

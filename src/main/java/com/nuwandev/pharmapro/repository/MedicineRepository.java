@@ -124,7 +124,7 @@ public class MedicineRepository {
                 rs.getObject("category_id", Long.class),
                 rs.getString("unit"),
                 rs.getString("barcode"),
-                MedicineStatus.valueOf(rs.getString("status")),
+                MedicineStatus.fromDbValue(rs.getString("status")),
                 rs.getString("description"),
                 rs.getBigDecimal("default_purchase_price"),
                 rs.getBigDecimal("default_sell_price"),

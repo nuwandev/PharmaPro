@@ -4,14 +4,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class PurchaseOrderController {
     @FXML
     private BorderPane purchaseOrderRoot;
     @FXML
-    private StackPane poListView;
+    private VBox poListView;
     @FXML
     private HBox poToolbar;
     @FXML
