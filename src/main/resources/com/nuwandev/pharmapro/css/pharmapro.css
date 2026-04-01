@@ -5,7 +5,7 @@
 
 /* ── Root / Global ────────────────────────────────────────── */
 .root {
-    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-family: "Segoe UI Emoji", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     -fx-font-size: 14px;
     -fx-background-color: #f5f5f5;
 }
@@ -908,3 +908,4 @@
     -fx-background-color: #0d9488;
     -fx-text-fill: white;
 }
+

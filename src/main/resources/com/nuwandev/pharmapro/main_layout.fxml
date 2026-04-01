@@ -38,7 +38,7 @@
                             styleClass="nav-item, nav-item-active" text="  Dashboard">
                         <tooltip><Tooltip text="Dashboard"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 15px; -fx-text-fill: inherit;" text="▖"/>
+                            <Label style="-fx-font-size: 20px;" text="🏠"/>
                         </graphic>
                     </Button>
 
@@ -46,7 +46,7 @@
                             styleClass="nav-item" text="  Point of Sale">
                         <tooltip><Tooltip text="Point of Sale"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="🛒"/>
+                            <Label style="-fx-font-size: 20px;" text="🛒"/>
                         </graphic>
                     </Button>
 
@@ -56,7 +56,7 @@
                             styleClass="nav-item" text="  Medicines">
                         <tooltip><Tooltip text="Medicines"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="💊"/>
+                            <Label style="-fx-font-size: 20px;" text="💊"/>
                         </graphic>
                     </Button>
 
@@ -64,7 +64,7 @@
                             styleClass="nav-item" text="  Batch Management">
                         <tooltip><Tooltip text="Batch Management"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="📦"/>
+                            <Label style="-fx-font-size: 20px;" text="📦"/>
                         </graphic>
                     </Button>
 
@@ -72,7 +72,7 @@
                             onAction="#navigateToPurchaseOrders" styleClass="nav-item" text="  Purchase Orders">
                         <tooltip><Tooltip text="Purchase Orders"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="📋"/>
+                            <Label style="-fx-font-size: 20px;" text="📋"/>
                         </graphic>
                     </Button>
 
@@ -80,7 +80,7 @@
                             styleClass="nav-item" text="  Suppliers">
                         <tooltip><Tooltip text="Suppliers"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="🏭"/>
+                            <Label style="-fx-font-size: 20px;" text="🏭"/>
                         </graphic>
                     </Button>
 
@@ -91,7 +91,7 @@
                             styleClass="nav-item" text="  Reports">
                         <tooltip><Tooltip text="Reports"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="📊"/>
+                            <Label style="-fx-font-size: 20px;" text="📊"/>
                         </graphic>
                     </Button>
 
@@ -99,7 +99,7 @@
                             styleClass="nav-item" text="  Settings">
                         <tooltip><Tooltip text="Settings"/></tooltip>
                         <graphic>
-                            <Label style="-fx-font-size: 14px;" text="⚙"/>
+                            <Label style="-fx-font-size: 20px;" text="⚙"/>
                         </graphic>
                     </Button>
 
@@ -157,7 +157,7 @@
                     <Button fx:id="notificationBtn" onAction="#showNotifications" styleClass="notif-btn"
                             StackPane.alignment="CENTER">
                         <graphic>
-                            <Label style="-fx-font-size: 16px;" text="🔔"/>
+                            <Label style="-fx-font-size: 20px;" text="🔔"/>
                         </graphic>
                         <tooltip>
                             <Tooltip text="Notifications"/>

@@ -291,7 +291,7 @@
                                    prefHeight="32"
                                    style="-fx-font-size: 13px;"
                                    maxWidth="54"/>
-                        <Label text="%" style="-fx-text-fill: #6b7280; -fx-font-size: 13px;"/>
+                        <Label text="\%" style="-fx-text-fill: #6b7280; -fx-font-size: 13px;"/>
                         <Label fx:id="discountValueLabel"
                                text="- $0.00"
                                style="-fx-text-fill: #10b981; -fx-font-size: 14px; -fx-font-weight: 600;"/>
